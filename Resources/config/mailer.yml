@@ -1,0 +1,11 @@
+services:
+    swiftmailer.transport.eventdispatcher:
+        class: Swift_Events_SimpleEventDispatcher
+
+    swiftmailer.mailer.transport.mindbaz:
+        class: MindbazBundle\SwiftMailer\MindbazTransport
+        arguments:
+            - '@swiftmailer.transport.eventdispatcher'
+        calls:
+            - [setOneshotService, ['@mindbaz.oneshot.service']]
+            - [setSubscriberService, ['@mindbaz.subscriber.service']]

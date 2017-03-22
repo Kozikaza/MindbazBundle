@@ -1,0 +1,27 @@
+{
+  "name": "daviddlv/mindbaz-bundle",
+  "type": "symfony-bundle",
+  "description": "Symfony bundle to provide a Mindbaz SwiftMailer service",
+  "keywords": ["mindbaz", "swiftmailer", "symfony", "bundle"],
+  "license": "MIT",
+  "autoload": {
+    "psr-4": { "MindbazBundle\\": "" }
+  },
+  "require": {
+    "php": "^5.3.9|^7.0",
+    "symfony/swiftmailer-bundle": "^2.5",
+    "lancasters/mindbaz-library": "dev-master"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/LancasterSolutions/mindbaz-library"
+    }
+  ],
+  "minimum-stability": "dev",
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  }
+}
