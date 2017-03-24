@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="swiftmailer.transport.eventdispatcher" class="Swift_Events_SimpleEventDispatcher" />
+
+        <service id="mindbaz.campaign.service" class="mbzCampaign\CampaignWebService">
+            <argument>%mindbaz.options%</argument>
+        </service>
+
+        <service id="mindbaz.oneshot.service" class="mbzOneshot\OneshotWebService" parent="mindbaz.campaign.service" />
+
+        <service id="mindbaz.subscriber.service" class="mbzSubscriber\SubscriberWebService" />
+
+        <service id="swiftmailer.mailer.transport.mindbaz" class="MindbazBundle\SwiftMailer\MindbazTransport">
+            <argument type="service" id="swiftmailer.transport.eventdispatcher" />
+            <call method="setOneshotService">
+                <argument type="service" id="mindbaz.oneshot.service" />
+            </call>
+            <call method="setSubscriberService">
+                <argument type="service" id="mindbaz.subscriber.service" />
+            </call>
+        </service>
+    </services>
+</container>

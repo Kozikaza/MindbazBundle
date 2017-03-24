@@ -2,11 +2,9 @@
 
 namespace MindbazBundle\DependencyInjection;
 
-use mbzCampaign\CampaignWebService;
-use mbzOneshot\OneshotWebService;
-use mbzSubscriber\SubscriberWebService;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -24,22 +22,9 @@ class MindbazExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('mindbaz.api_key', $config['options']['api_key']);
-        $container->setParameter('mindbaz.site_id', $config['options']['site_id']);
-        $container->setParameter('mindbaz.login', $config['options']['login']);
-        $container->setParameter('mindbaz.password', $config['options']['password']);
+        $container->setParameter('mindbaz.options', $config['options']);
 
-        $campaignService = new Definition(CampaignWebService::class, [
-            $config['options']
-        ]);
-        $container->setDefinition('mindbaz.campaign.service', $campaignService);
-
-        $oneShotService = new Definition(OneshotWebService::class, [
-            $config['options']
-        ]);
-        $container->setDefinition('mindbaz.oneshot.service', $oneShotService);
-
-        $subscriberService = new Definition(SubscriberWebService::class);
-        $container->setDefinition('mindbaz.subscriber.service', $subscriberService);
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('mailer.xml');
     }
 }

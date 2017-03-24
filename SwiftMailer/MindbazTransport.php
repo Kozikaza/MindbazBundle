@@ -1,52 +1,44 @@
 <?php
 
 namespace MindbazBundle\SwiftMailer;
-;
+
 use mbzOneshot\OneshotWebService;
 use mbzOneshot\Send;
 use mbzSubscriber\GetSubscriberByEmail;
 use mbzSubscriber\SubscriberWebService;
-use \Swift_Events_EventDispatcher;
-use \Swift_Events_EventListener;
-use \Swift_Events_SendEvent;
-use \Swift_Mime_Message;
-use \Swift_MimePart;
-use \Swift_Transport;
 
-class MindbazTransport implements Swift_Transport
+class MindbazTransport implements \Swift_Transport
 {
     /**
-     * @type Swift_Events_EventDispatcher
+     * @var \Swift_Events_EventDispatcher
      */
-    protected $dispatcher;
+    private $dispatcher;
 
     /**
      * @var OneshotWebService
      */
-    protected $oneshotService;
+    private $oneshotService;
 
     /**
      * @var SubscriberWebService
      */
-    protected $subscriberService;
+    private $subscriberService;
 
     /**
-     * @var array|null
+     * @var array
      */
-    protected $resultApi;
+    private $resultApi;
 
     /**
-     * @param Swift_Events_EventDispatcher $dispatcher
+     * @param \Swift_Events_EventDispatcher $dispatcher
      */
-    public function __construct(Swift_Events_EventDispatcher $dispatcher)
+    public function __construct(\Swift_Events_EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
-        $this->oneshotService = null;
-        $this->subscriberService = null;
     }
 
     /**
-     * Not used
+     * {@inheritdoc}
      */
     public function isStarted()
     {
@@ -54,63 +46,23 @@ class MindbazTransport implements Swift_Transport
     }
 
     /**
-     * Not used
+     * {@inheritdoc}
      */
     public function start()
     {
     }
 
     /**
-     * Not used
+     * {@inheritdoc}
      */
     public function stop()
     {
     }
 
     /**
-     * @param OneshotWebService $service
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setOneshotService(OneshotWebService $service)
-    {
-        $this->oneshotService = $service;
-
-        return $this;
-    }
-
-    /**
-     * @return null|OneshotWebService
-     */
-    public function getOneshotService()
-    {
-        return $this->oneshotService;
-    }
-
-    /**
-     * @param SubscriberWebService $service
-     * @return $this
-     */
-    public function setSubscriberService(SubscriberWebService $service)
-    {
-        $this->subscriberService = $service;
-
-        return $this;
-    }
-
-    /**
-     * @return null|SubscriberWebService
-     */
-    public function getSubscriberService()
-    {
-        return $this->subscriberService;
-    }
-
-    /**
-     * @param Swift_Mime_Message $message
-     * @param null $failedRecipients
-     * @return int Number of messages sent
-     */
-    public function send(Swift_Mime_Message $message, &$failedRecipients = null)
+    public function send(\Swift_Mime_Message $message, &$failedRecipients = null)
     {
         $this->resultApi = null;
 
@@ -150,62 +102,11 @@ class MindbazTransport implements Swift_Transport
     }
 
     /**
-     * @param Swift_Events_EventListener $plugin
-     */
-    public function registerPlugin(Swift_Events_EventListener $plugin)
-    {
-        $this->dispatcher->bindEventListener($plugin);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSupportedContentTypes()
-    {
-        return array(
-            'text/plain',
-            'text/html'
-        );
-    }
-
-    /**
-     * @param string $contentType
-     * @return bool
-     */
-    protected function supportsContentType($contentType)
-    {
-        return in_array($contentType, $this->getSupportedContentTypes());
-    }
-
-    /**
-     * @param Swift_Mime_Message $message
-     * @return string
-     */
-    protected function getMessagePrimaryContentType(Swift_Mime_Message $message)
-    {
-        $contentType = $message->getContentType();
-        if ($this->supportsContentType($contentType)) {
-            return $contentType;
-        }
-
-        // SwiftMailer hides the content type set in the constructor of Swift_Mime_Message as soon
-        // as you add another part to the message. We need to access the protected property
-        // _userContentType to get the original type.
-        $messageRef = new \ReflectionClass($message);
-        if ($messageRef->hasProperty('_userContentType')) {
-            $propRef = $messageRef->getProperty('_userContentType');
-            $propRef->setAccessible(true);
-            $contentType = $propRef->getValue($message);
-        }
-
-        return $contentType;
-    }
-
-    /**
-     * @param Swift_Mime_Message $message
+     * @param \Swift_Mime_Message $message
+     *
      * @return Send
      */
-    public function getMindbazMessage(Swift_Mime_Message $message)
+    public function getMindbazMessage(\Swift_Mime_Message $message)
     {
         if (!$message->getHeaders()->has('X-MBZ-Campaign')) {
             throw new \RuntimeException('Campaign ID must be defined in header "X-MBZ-Campaign"');
@@ -230,7 +131,7 @@ class MindbazTransport implements Swift_Transport
         }
 
         foreach ($message->getChildren() as $child) {
-            if ($child instanceof Swift_MimePart && $this->supportsContentType($child->getContentType())) {
+            if ($child instanceof \Swift_MimePart && $this->supportsContentType($child->getContentType())) {
                 if ($child->getContentType() == "text/html") {
                     $bodyHtml = $child->getBody();
                 } elseif ($child->getContentType() == "text/plain") {
@@ -244,7 +145,12 @@ class MindbazTransport implements Swift_Transport
         }
 
         $mindbazMessage = new Send(
-            $campaignId, $this->getSubscriber($to)->getIdSubscriber(), $bodyHtml, $bodyText, $fromName, $message->getSubject()
+            $campaignId,
+            $this->getSubscriber($to)->getIdSubscriber(),
+            $bodyHtml,
+            $bodyText,
+            $fromName,
+            $message->getSubject()
         );
 
         return $mindbazMessage;
@@ -252,6 +158,7 @@ class MindbazTransport implements Swift_Transport
 
     /**
      * @param string $email
+     *
      * @return \mbzSubscriber\Subscriber
      */
     public function getSubscriber($email)
@@ -263,6 +170,54 @@ class MindbazTransport implements Swift_Transport
     }
 
     /**
+     * @return null|SubscriberWebService
+     */
+    public function getSubscriberService()
+    {
+        return $this->subscriberService;
+    }
+
+    /**
+     * @param SubscriberWebService $service
+     *
+     * @return $this
+     */
+    public function setSubscriberService(SubscriberWebService $service)
+    {
+        $this->subscriberService = $service;
+
+        return $this;
+    }
+
+    /**
+     * @return null|OneshotWebService
+     */
+    public function getOneshotService()
+    {
+        return $this->oneshotService;
+    }
+
+    /**
+     * @param OneshotWebService $service
+     *
+     * @return $this
+     */
+    public function setOneshotService(OneshotWebService $service)
+    {
+        $this->oneshotService = $service;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function registerPlugin(\Swift_Events_EventListener $plugin)
+    {
+        $this->dispatcher->bindEventListener($plugin);
+    }
+
+    /**
      * @return null|array
      */
     public function getResultApi()
@@ -270,4 +225,38 @@ class MindbazTransport implements Swift_Transport
         return $this->resultApi;
     }
 
+    /**
+     * @param \Swift_Mime_Message $message
+     *
+     * @return string
+     */
+    private function getMessagePrimaryContentType(\Swift_Mime_Message $message)
+    {
+        $contentType = $message->getContentType();
+        if ($this->supportsContentType($contentType)) {
+            return $contentType;
+        }
+
+        // SwiftMailer hides the content type set in the constructor of \Swift_Mime_Message as soon
+        // as you add another part to the message. We need to access the protected property
+        // _userContentType to get the original type.
+        $messageRef = new \ReflectionClass($message);
+        if ($messageRef->hasProperty('_userContentType')) {
+            $propRef = $messageRef->getProperty('_userContentType');
+            $propRef->setAccessible(true);
+            $contentType = $propRef->getValue($message);
+        }
+
+        return $contentType;
+    }
+
+    /**
+     * @param string $contentType
+     *
+     * @return bool
+     */
+    private function supportsContentType($contentType)
+    {
+        return in_array($contentType, ['text/plain', 'text/html']);
+    }
 }
