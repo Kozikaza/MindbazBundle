@@ -4,6 +4,9 @@ Symfony bundle to provide a Mindbaz SwiftMailer service.
 
 Feel free to contribute on it!
 
+[![Build Status](https://travis-ci.org/daviddlv/MindbazBundle.svg?branch=master)](https://travis-ci.org/daviddlv/MindbazBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/daviddlv/MindbazBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/daviddlv/MindbazBundle/?branch=master)
+
 ## Installation
 
 Installing MindbazBundle can be done easily through [Composer](https://getcomposer.org/):

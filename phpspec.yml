@@ -1,0 +1,5 @@
+suites:
+    mindbaz_bundle:
+        namespace: MindbazBundle
+        psr4_prefix: MindbazBundle
+        src_path: .

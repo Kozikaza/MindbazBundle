@@ -4,8 +4,8 @@ namespace MindbazBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -14,6 +14,28 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class MindbazExtension extends Extension
 {
+    private $classes = [];
+
+    /**
+     * Gets the classes to cache.
+     *
+     * @return array An array of classes
+     */
+    public function getClassesToCompile()
+    {
+        return $this->classes;
+    }
+
+    /**
+     * Adds classes to the class cache.
+     *
+     * @param array $classes An array of classes
+     */
+    public function addClassesToCompile(array $classes)
+    {
+        $this->classes = array_merge($this->classes, $classes);
+    }
+
     /**
      * {@inheritDoc}
      */

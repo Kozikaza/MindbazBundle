@@ -18,15 +18,13 @@
     "autoload": {
         "psr-4": {
             "MindbazBundle\\": ""
-        }
+        },
+        "exclude-from-classmap": ["features/", "spec/"]
     },
-    "require": {
-        "php": ">=5.3.9",
-        "swiftmailer/swiftmailer": "~4.0|~5.0",
-        "lancasters/mindbaz-library": "dev-master",
-        "symfony/config": "~2.7|~3.0",
-        "symfony/dependency-injection": "~2.7|~3.0",
-        "symfony/http-kernel": "~2.7|~3.0"
+    "autoload-dev": {
+        "psr-4": {
+            "spec\\MindbazBundle\\": "spec"
+        }
     },
     "repositories": [
         {
@@ -34,6 +32,19 @@
             "url": "https://github.com/LancasterSolutions/mindbaz-library"
         }
     ],
+    "require": {
+        "php": ">=5.3.9",
+        "swiftmailer/swiftmailer": "~4.0|~5.0",
+        "lancasters/mindbaz-library": "dev-master",
+        "symfony/config": "~2.7|~3.0",
+        "symfony/dependency-injection": "~2.7|~3.0"
+    },
+    "require-dev": {
+        "behat/behat": "~3.0",
+        "behat/symfony2-extension": "~2.0",
+        "symfony/browser-kit": "~2.3|~3.0",
+        "phpspec/phpspec": "~3.0"
+    },
     "minimum-stability": "stable",
     "extra": {
         "branch-alias": {

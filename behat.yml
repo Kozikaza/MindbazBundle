@@ -1,0 +1,13 @@
+default:
+    suites:
+        default:
+            contexts:
+                - MailerContext:
+                    - '@doctrine'
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                env:       'test'
+                debug:     'true'
+                path:      'features/app/AppKernel.php'
+                bootstrap: 'features/app/bootstrap.php'
