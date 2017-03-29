@@ -10,32 +10,32 @@ use PhpSpec\ObjectBehavior;
 
 class SubscriberEncoderSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(SubscriberEncoder::class);
     }
 
-    function it_supports_encoding()
+    public function it_supports_encoding()
     {
         $this->supportsEncoding('mindbaz')->shouldBeTrue();
     }
 
-    function it_does_not_support_encoding()
+    public function it_does_not_support_encoding()
     {
         $this->supportsEncoding('invalid')->shouldBeFalse();
     }
 
-    function it_supports_decoding()
+    public function it_supports_decoding()
     {
         $this->supportsDecoding('mindbaz')->shouldBeTrue();
     }
 
-    function it_does_not_support_decoding()
+    public function it_does_not_support_decoding()
     {
         $this->supportsDecoding('invalid')->shouldBeFalse();
     }
 
-    function it_encodes()
+    public function it_encodes()
     {
         $data = [
             'email'                 => 'foo@example.com',
@@ -57,7 +57,7 @@ class SubscriberEncoderSpec extends ObjectBehavior
         $subscriber->getFld()->shouldCount(count($data));
     }
 
-    function it_decodes()
+    public function it_decodes()
     {
         $data = [
             'email'                 => 'foo@example.com',
@@ -83,22 +83,22 @@ class SubscriberEncoderSpec extends ObjectBehavior
         $this->decode($subscriber, SubscriberEncoder::FORMAT)->shouldBeEqualTo($data);
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
-            'beTrue' => function($subject) {
+            'beTrue' => function ($subject) {
                 return true === $subject;
             },
-            'beFalse' => function($subject) {
+            'beFalse' => function ($subject) {
                 return false === $subject;
             },
-            'beInstanceOf' => function($subject, $class) {
+            'beInstanceOf' => function ($subject, $class) {
                 return $subject instanceof $class;
             },
-            'beAnArray' => function($subject) {
+            'beAnArray' => function ($subject) {
                 return is_array($subject);
             },
-            'count' => function($subject, $count) {
+            'count' => function ($subject, $count) {
                 return $count === count($subject);
             },
         ];

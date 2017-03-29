@@ -14,17 +14,17 @@ use PhpSpec\ObjectBehavior;
  */
 class MindbazTransportSpec extends ObjectBehavior
 {
-    function let(SubscriberManager $subscriberManager, \Swift_Events_EventDispatcher $eventDispatcher)
+    public function let(SubscriberManager $subscriberManager, \Swift_Events_EventDispatcher $eventDispatcher)
     {
         $this->beConstructedWith($subscriberManager, $eventDispatcher, ['register' => 10], false);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(MindbazTransport::class);
     }
 
-    function it_sends_a_message_to_a_subscriber_in_a_campaign(SubscriberManager $subscriberManager, \Swift_Mime_Message $message, Subscriber $subscriber)
+    public function it_sends_a_message_to_a_subscriber_in_a_campaign(SubscriberManager $subscriberManager, \Swift_Mime_Message $message, Subscriber $subscriber)
     {
         $message->getTo()->willReturn(['foo@example.com' => null])->shouldBeCalledTimes(1);
         $subscriberManager->findByEmail(['foo@example.com'])->willReturn([$subscriber])->shouldBeCalledTimes(1);
@@ -36,12 +36,12 @@ class MindbazTransportSpec extends ObjectBehavior
         $this->send($message)->shouldBeEqualTo(1);
     }
 
-    function it_throws_an_exception_if_no_campaign_has_been_set(\Swift_Mime_Message $message)
+    public function it_throws_an_exception_if_no_campaign_has_been_set(\Swift_Mime_Message $message)
     {
         $this->shouldThrow(InvalidCampaignException::class)->during('send', [$message]);
     }
 
-    function it_throws_an_exception_if_missing_subscribers_are_found_and_insert_option_not_set(SubscriberManager $subscriberManager, \Swift_Mime_Message $message, Subscriber $subscriber)
+    public function it_throws_an_exception_if_missing_subscribers_are_found_and_insert_option_not_set(SubscriberManager $subscriberManager, \Swift_Mime_Message $message, Subscriber $subscriber)
     {
         $message->getTo()->willReturn(['foo@example.com' => null])->shouldBeCalledTimes(1);
         $subscriberManager->findByEmail(['foo@example.com'])->willReturn([])->shouldBeCalledTimes(1);
@@ -53,7 +53,7 @@ class MindbazTransportSpec extends ObjectBehavior
         $this->shouldThrow(MissingSubscribersException::class)->during('send', [$message]);
     }
 
-    function it_creates_missing_subscribers_if_insert_option_is_set(SubscriberManager $subscriberManager, \Swift_Mime_Message $message, Subscriber $subscriber)
+    public function it_creates_missing_subscribers_if_insert_option_is_set(SubscriberManager $subscriberManager, \Swift_Mime_Message $message, Subscriber $subscriber)
     {
         $message->getTo()->willReturn(['foo@example.com' => null])->shouldBeCalledTimes(1);
         $subscriberManager->findByEmail(['foo@example.com'])->willReturn([])->shouldBeCalledTimes(1);
@@ -66,37 +66,37 @@ class MindbazTransportSpec extends ObjectBehavior
         $this->send($message);
     }
 
-    function it_registers_plugin(\Swift_Events_EventDispatcher $eventDispatcher, \Swift_Events_EventListener $plugin)
+    public function it_registers_plugin(\Swift_Events_EventDispatcher $eventDispatcher, \Swift_Events_EventListener $plugin)
     {
         $eventDispatcher->bindEventListener($plugin)->shouldBeCalledTimes(1);
         $this->registerPlugin($plugin);
     }
 
-    function it_is_started()
+    public function it_is_started()
     {
         $this->isStarted()->shouldBeTrue();
     }
 
-    function it_starts()
+    public function it_starts()
     {
         $this->start()->shouldBeNull();
     }
 
-    function it_stops()
+    public function it_stops()
     {
         $this->stop()->shouldBeNull();
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
-            'beTrue' => function($subject) {
+            'beTrue' => function ($subject) {
                 return true === $subject;
             },
-            'beFalse' => function($subject) {
+            'beFalse' => function ($subject) {
                 return false === $subject;
             },
-            'beNull' => function($subject) {
+            'beNull' => function ($subject) {
                 return null === $subject;
             },
         ];

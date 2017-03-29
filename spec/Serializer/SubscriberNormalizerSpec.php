@@ -8,32 +8,32 @@ use PhpSpec\ObjectBehavior;
 
 class SubscriberNormalizerSpec extends ObjectBehavior
 {
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(SubscriberNormalizer::class);
     }
 
-    function it_supports_normalization(Subscriber $subscriber)
+    public function it_supports_normalization(Subscriber $subscriber)
     {
         $this->supportsNormalization($subscriber)->shouldBeTrue();
     }
 
-    function it_does_not_support_normalization(\stdClass $object)
+    public function it_does_not_support_normalization(\stdClass $object)
     {
         $this->supportsNormalization($object)->shouldBeFalse();
     }
 
-    function it_supports_denormalization()
+    public function it_supports_denormalization()
     {
         $this->supportsDenormalization([], Subscriber::class)->shouldBeTrue();
     }
 
-    function it_does_not_support_denormalization()
+    public function it_does_not_support_denormalization()
     {
         $this->supportsDenormalization([], \stdClass::class)->shouldBeFalse();
     }
 
-    function it_normalizes()
+    public function it_normalizes()
     {
         $subscriber = new Subscriber();
         $subscriber->setEmail('foo@example.com');
@@ -47,7 +47,7 @@ class SubscriberNormalizerSpec extends ObjectBehavior
         ]);
     }
 
-    function it_denormalizes()
+    public function it_denormalizes()
     {
         $subscriber = new Subscriber();
         $subscriber->setEmail('foo@example.com');
@@ -65,19 +65,19 @@ class SubscriberNormalizerSpec extends ObjectBehavior
         $result->shouldHavePropertyEqualTo('lastName', 'DOE');
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
-            'beTrue' => function($subject) {
+            'beTrue' => function ($subject) {
                 return true === $subject;
             },
-            'beFalse' => function($subject) {
+            'beFalse' => function ($subject) {
                 return false === $subject;
             },
-            'beInstanceOf' => function($subject, $class) {
+            'beInstanceOf' => function ($subject, $class) {
                 return $subject instanceof $class;
             },
-            'havePropertyEqualTo' => function($subject, $property, $value) {
+            'havePropertyEqualTo' => function ($subject, $property, $value) {
                 $reflectionProperty = new \ReflectionProperty(get_class($subject), $property);
                 $reflectionProperty->setAccessible(true);
 

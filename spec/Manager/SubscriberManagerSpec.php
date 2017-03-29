@@ -26,18 +26,18 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class SubscriberManagerSpec extends ObjectBehavior
 {
-    function let(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, SerializerInterface $serializer, LoggerInterface $logger)
+    public function let(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, SerializerInterface $serializer, LoggerInterface $logger)
     {
         $serializer->implement(DenormalizerInterface::class);
         $this->beConstructedWith($subscriberWebService, $oneshotWebService, $serializer, $logger);
     }
 
-    function it_is_initializable()
+    public function it_is_initializable()
     {
         $this->shouldHaveType(SubscriberManager::class);
     }
 
-    function it_creates_and_inserts_a_subscriber_from_data(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, InsertSubscriberResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_creates_and_inserts_a_subscriber_from_data(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, InsertSubscriberResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $serializer->denormalize([
             'email'     => 'foo@example.com',
@@ -58,7 +58,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         ]);
     }
 
-    function it_successfully_unsubscribes_a_subscriber(SubscriberWebService $subscriberWebService, UnsubscribeResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_successfully_unsubscribes_a_subscriber(SubscriberWebService $subscriberWebService, UnsubscribeResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $subscriber->getId()->willReturn(123)->shouldBeCalledTimes(2);
         $subscriberWebService->Unsubscribe(new Unsubscribe(123, null, null))->willReturn($response)->shouldBeCalledTimes(1);
@@ -69,7 +69,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->unsubscribe($subscriber);
     }
 
-    function it_doesnt_unsubscribes_a_subscriber(SubscriberWebService $subscriberWebService, UnsubscribeResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_doesnt_unsubscribes_a_subscriber(SubscriberWebService $subscriberWebService, UnsubscribeResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $subscriber->getId()->willReturn(123)->shouldBeCalledTimes(2);
         $subscriberWebService->Unsubscribe(new Unsubscribe(123, null, null))->willReturn($response)->shouldBeCalledTimes(1);
@@ -80,7 +80,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->unsubscribe($subscriber);
     }
 
-    function it_finds_no_subscribers_by_email(SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response)
+    public function it_finds_no_subscribers_by_email(SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response)
     {
         $subscriberWebService->GetSubscribersByEmail(new GetSubscribersByEmail(
             (new ArrayOfString())->setString(['foo@example.com']),
@@ -91,7 +91,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->findByEmail(['foo@example.com'])->shouldBeEqualTo([]);
     }
 
-    function it_finds_subscribers_by_email(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_finds_subscribers_by_email(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $subscriberWebService->GetSubscribersByEmail(new GetSubscribersByEmail(
             (new ArrayOfString())->setString(['foo@example.com']),
@@ -99,12 +99,13 @@ class SubscriberManagerSpec extends ObjectBehavior
         ))->willReturn($response)->shouldBeCalledTimes(1);
         $response->getGetSubscribersByEmailResult()->willReturn($subscribers)->shouldBeCalledTimes(1);
         $subscribers->getSubscriber()->willReturn([$mindbazSubscriber])->shouldBeCalledTimes(1);
-        $serializer->deserialize($mindbazSubscriber, Subscriber::class, SubscriberEncoder::FORMAT)->willReturn($subscriber)->shouldBeCalledTimes(1);;
+        $serializer->deserialize($mindbazSubscriber, Subscriber::class, SubscriberEncoder::FORMAT)->willReturn($subscriber)->shouldBeCalledTimes(1);
+        ;
 
         $this->findByEmail(['foo@example.com'])->shouldBeEqualTo([$subscriber]);
     }
 
-    function it_does_not_find_one_subscriber_by_email(SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response)
+    public function it_does_not_find_one_subscriber_by_email(SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response)
     {
         $subscriberWebService->GetSubscribersByEmail(new GetSubscribersByEmail(
             (new ArrayOfString())->setString(['foo@example.com']),
@@ -115,7 +116,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->findOneByEmail('foo@example.com')->shouldBeNull();
     }
 
-    function it_finds_one_subscriber_by_email(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_finds_one_subscriber_by_email(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $subscriberWebService->GetSubscribersByEmail(new GetSubscribersByEmail(
             (new ArrayOfString())->setString(['foo@example.com']),
@@ -123,12 +124,13 @@ class SubscriberManagerSpec extends ObjectBehavior
         ))->willReturn($response)->shouldBeCalledTimes(1);
         $response->getGetSubscribersByEmailResult()->willReturn($subscribers)->shouldBeCalledTimes(1);
         $subscribers->getSubscriber()->willReturn([$mindbazSubscriber])->shouldBeCalledTimes(1);
-        $serializer->deserialize($mindbazSubscriber, Subscriber::class, SubscriberEncoder::FORMAT)->willReturn($subscriber)->shouldBeCalledTimes(1);;
+        $serializer->deserialize($mindbazSubscriber, Subscriber::class, SubscriberEncoder::FORMAT)->willReturn($subscriber)->shouldBeCalledTimes(1);
+        ;
 
         $this->findOneByEmail('foo@example.com')->shouldBeEqualTo($subscriber);
     }
 
-    function it_successfully_sends_a_message(OneshotWebService $oneshotWebService, SendResponse $response, Subscriber $subscriber, \Swift_Mime_Message $message, LoggerInterface $logger)
+    public function it_successfully_sends_a_message(OneshotWebService $oneshotWebService, SendResponse $response, Subscriber $subscriber, \Swift_Mime_Message $message, LoggerInterface $logger)
     {
         $subscriber->getId()->willReturn(456)->shouldBeCalledTimes(2);
         $message->getContentType()->willReturn('text/html')->shouldBeCalledTimes(1);
@@ -149,7 +151,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->send(123, $subscriber, $message);
     }
 
-    function it_unsuccessfully_sends_a_message(OneshotWebService $oneshotWebService, SendResponse $response, Subscriber $subscriber, \Swift_Mime_Message $message, LoggerInterface $logger)
+    public function it_unsuccessfully_sends_a_message(OneshotWebService $oneshotWebService, SendResponse $response, Subscriber $subscriber, \Swift_Mime_Message $message, LoggerInterface $logger)
     {
         $subscriber->getId()->willReturn(456)->shouldBeCalledTimes(2);
         $message->getContentType()->willReturn('text/html')->shouldBeCalledTimes(1);
@@ -170,10 +172,10 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->send(123, $subscriber, $message);
     }
 
-    function getMatchers()
+    public function getMatchers()
     {
         return [
-            'beNull' => function($subject) {
+            'beNull' => function ($subject) {
                 return null === $subject;
             },
         ];
