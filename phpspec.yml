@@ -3,3 +3,17 @@ suites:
         namespace: MindbazBundle
         psr4_prefix: MindbazBundle
         src_path: .
+extensions:
+    LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+        format:
+            - clover
+            - html
+        output:
+            clover: coverage.xml
+            html: coverage
+        whitelist:
+            - .
+        blacklist:
+            - vendor
+            - features
+            - spec

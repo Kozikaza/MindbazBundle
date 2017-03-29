@@ -19,6 +19,13 @@ build:
     environment:
         php:
             version: 5.6
+    tests:
+        override:
+            -
+                command: 'vendor/bin/phpspec run'
+                coverage:
+                    file: 'coverage_file'
+                    format: 'php-clover'
 
 tools:
     php_code_sniffer:

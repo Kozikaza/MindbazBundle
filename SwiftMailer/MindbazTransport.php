@@ -129,6 +129,8 @@ class MindbazTransport implements \Swift_Transport
         foreach ($subscribers as $subscriber) {
             $this->subscriberManager->send($this->campaigns[$this->campaign], $subscriber, $message);
         }
+
+        return count($subscribers);
     }
 
     /**

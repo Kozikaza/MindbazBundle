@@ -6,7 +6,6 @@ use mbzOneshot\OneshotWebService;
 use mbzOneshot\Send;
 use mbzSubscriber\ArrayOfInt;
 use mbzSubscriber\ArrayOfString;
-use mbzSubscriber\GetSubscriber;
 use mbzSubscriber\GetSubscribersByEmail;
 use mbzSubscriber\InsertSubscriber;
 use mbzSubscriber\Subscriber as MindbazSubscriber;
@@ -48,10 +47,10 @@ class SubscriberManager
     private $logger;
 
     /**
-     * @param SubscriberWebService $subscriberWebService
-     * @param OneshotWebService    $oneshotWebService
-     * @param SerializerInterface  $serializer
-     * @param LoggerInterface|null $logger
+     * @param SubscriberWebService                       $subscriberWebService
+     * @param OneshotWebService                          $oneshotWebService
+     * @param SerializerInterface|DenormalizerInterface  $serializer
+     * @param LoggerInterface|null                       $logger
      */
     public function __construct(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, SerializerInterface $serializer, LoggerInterface $logger = null)
     {
