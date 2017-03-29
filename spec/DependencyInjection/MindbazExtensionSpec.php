@@ -1,11 +1,23 @@
 <?php
 
+/*
+ * This file is part of the MindbazBundle package.
+ *
+ * (c) David DELEVOYE <david.delevoye@adeo.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace spec\MindbazBundle\DependencyInjection;
 
 use MindbazBundle\DependencyInjection\MindbazExtension;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @author Vincent Chalamon <vincent@les-tilleuls.coop>
+ */
 class MindbazExtensionSpec extends ObjectBehavior
 {
     public function it_is_initializable()

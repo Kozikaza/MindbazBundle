@@ -1,12 +1,20 @@
 <?php
 
+/*
+ * This file is part of the MindbazBundle package.
+ *
+ * (c) David DELEVOYE <david.delevoye@adeo.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use Behat\Behat\Context\Context;
 use Dubture\Monolog\Reader\LogReader;
 use MindbazBundle\Exception\InvalidCampaignException;
 use MindbazBundle\Exception\MissingSubscribersException;
 use MindbazBundle\Manager\SubscriberManager;
 use MindbazBundle\SwiftMailer\MindbazTransport;
-use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -161,7 +169,7 @@ HTML
             }
         }
 
-        throw new ExpectationFailedException('Unable to find log entry: email may not have been sent');
+        throw new PHPUnit_Framework_ExpectationFailedException('Unable to find log entry: email may not have been sent');
     }
 
     /**

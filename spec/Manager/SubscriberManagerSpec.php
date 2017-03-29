@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the MindbazBundle package.
+ *
+ * (c) David DELEVOYE <david.delevoye@adeo.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace spec\MindbazBundle\Manager;
 
 use mbzOneshot\OneshotWebService;
@@ -24,6 +33,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * @author Vincent Chalamon <vincent@les-tilleuls.coop>
+ */
 class SubscriberManagerSpec extends ObjectBehavior
 {
     public function let(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, SerializerInterface $serializer, LoggerInterface $logger)
