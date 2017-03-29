@@ -24,7 +24,7 @@ build:
             -
                 command: 'vendor/bin/phpspec run'
                 coverage:
-                    file: 'coverage_file'
+                    file: 'coverage.xml'
                     format: 'php-clover'
 
 tools:
