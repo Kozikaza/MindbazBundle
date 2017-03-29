@@ -37,9 +37,33 @@ When you send a PR, just make sure that:
 * You add some documentation (PHPDoc & user doc: README, custom documentation file)
 * You make the PR on the same branch you based your changes on. If you see commits that you did not make in your PR,
 you're doing it wrong
-* Also don't forget to add a comment when you update a PR with a ping to the maintainer (`@daviddlv`),
+* Also don't forget to add a comment when you update a PR with a ping to the maintainers (`@daviddlv`, `@vincentchalamon`),
 so we will get a notification
 * [Squash your commits](#squash-your-commits) into one commit
+
+### Writing tests
+
+You must write unit & functional tests when you send a PR. Functional tests are written using [Behat](http://behat.org/),
+unit tests using [PHPSpec](http://www.phpspec.net/).
+
+To run Behat tests, you must configure your Mindbaz account in `features/app/parameters.yml` file:
+
+```yml
+parameters:
+    mindbaz_id_site: 123
+    mindbaz_login: user
+    mindbaz_password: password
+    mindbaz_campaigns: {firstCampaignAlias: 123}
+```
+
+Please contact Mindbaz to retrieve your credentials.
+
+You can run tests:
+
+```
+vendor/bin/behat
+vendor/bin/phpspec run
+```
 
 ## Squash your commits
 

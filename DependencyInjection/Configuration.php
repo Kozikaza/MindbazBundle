@@ -22,15 +22,19 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('mindbaz');
         $rootNode
             ->children()
-                ->scalarNode('wsdl')->defaultValue('http://webservice.mindbaz.com/Campaign.asmx?WSDL')->end()
-                ->arrayNode('options')
+                ->arrayNode('credentials')
                     ->children()
-                        ->scalarNode('api_key')->isRequired()->cannotBeEmpty()->end()
-                        ->scalarNode('site_id')->isRequired()->cannotBeEmpty()->end()
+                        ->integerNode('idSite')->isRequired()->end()
                         ->scalarNode('login')->isRequired()->cannotBeEmpty()->end()
                         ->scalarNode('password')->isRequired()->cannotBeEmpty()->end()
                     ->end()
                 ->end()
+                ->arrayNode('campaigns')
+                    ->useAttributeAsKey('name')
+                    ->requiresAtLeastOneElement()
+                    ->prototype('scalar')->end()
+                ->end()
+                ->booleanNode('insertMissingSubscribers')->defaultFalse()->end()
             ->end();
 
         return $treeBuilder;

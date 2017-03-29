@@ -3,7 +3,9 @@ default:
         default:
             contexts:
                 - MailerContext:
-                    - '@doctrine'
+                    - '@mailer'
+                    - '@logger'
+                    - '@mindbaz.manager.subscriber'
     extensions:
         Behat\Symfony2Extension:
             kernel:

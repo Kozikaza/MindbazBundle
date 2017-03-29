@@ -44,7 +44,9 @@ class MindbazExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('mindbaz.options', $config['options']);
+        $container->setParameter('mindbaz.credentials', $config['credentials']);
+        $container->setParameter('mindbaz.campaigns', $config['campaigns']);
+        $container->setParameter('mindbaz.insertMissingSubscribers', $config['insertMissingSubscribers']);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('mailer.xml');

@@ -45,5 +45,4 @@ install:
     - composer install
 
 script:
-    - vendor/bin/phpspec
-    - vendor/bin/behat
+    - vendor/bin/phpspec run

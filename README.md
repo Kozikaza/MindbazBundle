@@ -32,38 +32,21 @@ public function registerBundles()
 
 ## Configuration
 
-Edit your configuration files to specify your Mindbaz credentials:
-
-```yml
-# parameters.yml
-mindbaz_api_key: FILL_ME
-mindbaz_site_id: FILL_ME
-mindbaz_login: FILL_ME
-mindbaz_password: FILL_ME
-```
+Edit your configuration file to specify your Mindbaz credentials & campaigns:
 
 ```yml
 # config.yml
 mindbaz:
-    options:
-        api_key: %mindbaz_api_key%
-        site_id: %mindbaz_site_id%
-        login: %mindbaz_login%
-        password: %mindbaz_password%
+    credentials:
+        idSite: 123
+        login: foo
+        password: p4$$w0rd
+    campaigns:
+        register: 123
+        forgot-password: 456
 ```
 
-You can also override the Mindbaz default WSDL url (default is
-[http://webservice.mindbaz.com/Campaign.asmx?WSDL](http://webservice.mindbaz.com/Campaign.asmx?WSDL)):
-
-```yml
-mindbaz:
-    wsdl: http://example.com/Campaign.asmx?WSDL
-    options:
-        api_key: %mindbaz_api_key%
-        site_id: %mindbaz_site_id%
-        login: %mindbaz_login%
-        password: %mindbaz_password%
-```
+**Don't forget to change credentials in previous example!**
 
 ## Credits
 

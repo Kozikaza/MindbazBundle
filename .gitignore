@@ -1,2 +1,5 @@
 vendor
 composer.lock
+features/app/cache
+features/app/logs
+features/app/parameters.yml
