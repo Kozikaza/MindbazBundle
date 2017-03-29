@@ -154,13 +154,12 @@ class SubscriberManager
      */
     public function send($idCampaign, Subscriber $subscriber, \Swift_Mime_Message $message)
     {
-        $contentType = $message->getContentType();
         $response = $this->oneshotWebService->Send(
             new Send(
                 $idCampaign,
                 $subscriber->getId(),
-                'text/html' === $contentType ? $message->getBody() : null,
-                'text/plain' === $contentType ? $message->getBody() : null,
+                $this->getBody($message, 'text/html'),
+                $this->getBody($message, 'text/plain'),
                 $message->getSender(),
                 $message->getSubject()
             )
@@ -170,5 +169,26 @@ class SubscriberManager
         } else {
             $this->logger->error('An error occurred while sending the message to subscriber', ['id' => $subscriber->getId(), 'response' => $response->getSendResult()]);
         }
+    }
+
+    /**
+     * @param \Swift_Mime_Message $message
+     * @param string              $contentTypeRequired
+     *
+     * @return null|string
+     */
+    private function getBody(\Swift_Mime_Message $message, $contentTypeRequired)
+    {
+        if ($contentTypeRequired === $message->getContentType()) {
+            return $message->getBody();
+        }
+
+        foreach ($message->getChildren() as $child) {
+            if ($contentTypeRequired === $child->getContentType()) {
+                return $child->getBody();
+            }
+        }
+
+        return null;
     }
 }

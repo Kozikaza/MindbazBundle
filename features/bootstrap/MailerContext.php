@@ -120,6 +120,7 @@ HTML
             , 'text/html');
         $message->setFrom('noreply@example.com');
         $message->addTo('vincent@les-tilleuls.coop');
+        $message->addPart('Mindbaz body message', 'text/plain');
         try {
             if (0 === $this->mailer->send($message)) {
                 throw new \RuntimeException('Unable to send email');
@@ -140,6 +141,7 @@ HTML
         , 'text/html');
         $message->setFrom('noreply@example.com');
         $message->addTo($this->randomEmail);
+        $message->addPart('Mindbaz body message', 'text/plain');
         try {
             if (0 === $this->mailer->send($message)) {
                 throw new \RuntimeException('Unable to send email');

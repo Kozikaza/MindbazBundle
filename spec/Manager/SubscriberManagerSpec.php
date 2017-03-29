@@ -81,7 +81,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->unsubscribe($subscriber);
     }
 
-    public function it_doesnt_unsubscribes_a_subscriber(SubscriberWebService $subscriberWebService, UnsubscribeResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_doesnt_unsubscribes_a_subscriber(SubscriberWebService $subscriberWebService, UnsubscribeResponse $response, LoggerInterface $logger, Subscriber $subscriber)
     {
         $subscriber->getId()->willReturn(123)->shouldBeCalledTimes(2);
         $subscriberWebService->Unsubscribe(new Unsubscribe(123, null, null))->willReturn($response)->shouldBeCalledTimes(1);
@@ -142,10 +142,13 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->findOneByEmail('foo@example.com')->shouldBeEqualTo($subscriber);
     }
 
-    public function it_successfully_sends_a_message(OneshotWebService $oneshotWebService, SendResponse $response, Subscriber $subscriber, \Swift_Mime_Message $message, LoggerInterface $logger)
+    public function it_successfully_sends_a_message(OneshotWebService $oneshotWebService, SendResponse $response, Subscriber $subscriber, \Swift_Mime_Message $message, \Swift_Mime_MimeEntity $child, LoggerInterface $logger)
     {
         $subscriber->getId()->willReturn(456)->shouldBeCalledTimes(2);
-        $message->getContentType()->willReturn('text/html')->shouldBeCalledTimes(1);
+        $message->getChildren()->willReturn([$child])->shouldBeCalledTimes(1);
+        $child->getContentType()->willReturn('text/plain')->shouldBeCalledTimes(1);
+        $child->getBody()->willReturn('Foo')->shouldBeCalledTimes(1);
+        $message->getContentType()->willReturn('text/html')->shouldBeCalledTimes(2);
         $message->getBody()->willReturn('<p>Foo</p>')->shouldBeCalledTimes(1);
         $message->getSender()->willReturn('noreply@example.com')->shouldBeCalledTimes(1);
         $message->getSubject()->willReturn('Bar')->shouldBeCalledTimes(1);
@@ -153,7 +156,7 @@ class SubscriberManagerSpec extends ObjectBehavior
             123,
             456,
             '<p>Foo</p>',
-            null,
+            'Foo',
             'noreply@example.com',
             'Bar'
         ))->willReturn($response)->shouldBeCalledTimes(1);
@@ -166,7 +169,8 @@ class SubscriberManagerSpec extends ObjectBehavior
     public function it_unsuccessfully_sends_a_message(OneshotWebService $oneshotWebService, SendResponse $response, Subscriber $subscriber, \Swift_Mime_Message $message, LoggerInterface $logger)
     {
         $subscriber->getId()->willReturn(456)->shouldBeCalledTimes(2);
-        $message->getContentType()->willReturn('text/html')->shouldBeCalledTimes(1);
+        $message->getChildren()->willReturn([])->shouldBeCalledTimes(1);
+        $message->getContentType()->willReturn('text/html')->shouldBeCalledTimes(2);
         $message->getBody()->willReturn('<p>Foo</p>')->shouldBeCalledTimes(1);
         $message->getSender()->willReturn('noreply@example.com')->shouldBeCalledTimes(1);
         $message->getSubject()->willReturn('Bar')->shouldBeCalledTimes(1);
