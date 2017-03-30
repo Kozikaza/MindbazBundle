@@ -14,10 +14,10 @@ namespace MindbazBundle\Exception;
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>
  */
-class MissingSubscribersException extends \LogicException
+class SendErrorException extends \RuntimeException
 {
-    public function __construct(array $invalid, $code = 0, \Exception $previous = null)
+    public function __construct($message = 'An error occurred while sending the message', $code = 0, \Exception $previous = null)
     {
-        parent::__construct(sprintf('Missing subscribers in Mindbaz: %s', implode(', ', $invalid)), 0, null);
+        parent::__construct($message, $code, $previous);
     }
 }

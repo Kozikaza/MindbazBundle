@@ -25,6 +25,7 @@ use mbzSubscriber\Subscriber as MindbazSubscriber;
 use mbzSubscriber\SubscriberWebService;
 use mbzSubscriber\Unsubscribe;
 use mbzSubscriber\UnsubscribeResponse;
+use MindbazBundle\Exception\SendErrorException;
 use MindbazBundle\Manager\SubscriberManager;
 use MindbazBundle\Model\Subscriber;
 use MindbazBundle\Serializer\SubscriberEncoder;
@@ -185,7 +186,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $response->getSendResult()->willReturn(SubscriberManager::MINDBAZ_SEND_RESPONSE_NOK)->shouldBeCalledTimes(2);
         $logger->error('An error occurred while sending the message to subscriber', ['id' => 456, 'response' => SubscriberManager::MINDBAZ_SEND_RESPONSE_NOK])->shouldBeCalledTimes(1);
 
-        $this->send(123, $subscriber, $message);
+        $this->shouldThrow(SendErrorException::class)->during('send', [123, $subscriber, $message]);
     }
 
     public function getMatchers()

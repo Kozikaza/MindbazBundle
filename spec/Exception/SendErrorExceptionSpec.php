@@ -9,15 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Exception;
+namespace spec\MindbazBundle\Exception;
+
+use MindbazBundle\Exception\SendErrorException;
+use PhpSpec\ObjectBehavior;
 
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>
  */
-class MissingSubscribersException extends \LogicException
+class SendErrorExceptionSpec extends ObjectBehavior
 {
-    public function __construct(array $invalid, $code = 0, \Exception $previous = null)
+    public function it_is_initializable()
     {
-        parent::__construct(sprintf('Missing subscribers in Mindbaz: %s', implode(', ', $invalid)), 0, null);
+        $this->shouldHaveType(SendErrorException::class);
     }
 }

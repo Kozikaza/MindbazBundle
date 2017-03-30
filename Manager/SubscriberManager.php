@@ -20,6 +20,7 @@ use mbzSubscriber\InsertSubscriber;
 use mbzSubscriber\Subscriber as MindbazSubscriber;
 use mbzSubscriber\SubscriberWebService;
 use mbzSubscriber\Unsubscribe;
+use MindbazBundle\Exception\SendErrorException;
 use MindbazBundle\Model\Subscriber;
 use MindbazBundle\Serializer\SubscriberEncoder;
 use Psr\Log\LoggerInterface;
@@ -168,6 +169,8 @@ class SubscriberManager
             $this->logger->info('Message successfully sent to subscriber', ['id' => $subscriber->getId()]);
         } else {
             $this->logger->error('An error occurred while sending the message to subscriber', ['id' => $subscriber->getId(), 'response' => $response->getSendResult()]);
+
+            throw new SendErrorException();
         }
     }
 
