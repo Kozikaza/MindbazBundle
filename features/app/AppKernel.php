@@ -26,13 +26,18 @@ class AppKernel extends Kernel
 
     public function registerBundles()
     {
-        return [
+        $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new MindbazBundle\MindbazBundle(),
             new TestBundle\TestBundle(),
         ];
+        if ('jmsserializer' === $this->getEnvironment()) {
+            $bundles[] = new JMS\SerializerBundle\JMSSerializerBundle();
+        }
+
+        return $bundles;
     }
 
     protected function configureRoutes(RouteCollectionBuilder $routes)

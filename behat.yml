@@ -13,3 +13,19 @@ default:
                 debug:     'true'
                 path:      'features/app/AppKernel.php'
                 bootstrap: 'features/app/bootstrap.php'
+
+jmsserializer:
+    suites:
+        default:
+            contexts:
+                - MailerContext:
+                    - '@mailer'
+                    - '@logger'
+                    - '@mindbaz.manager.subscriber'
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                env:       'jmsserializer'
+                debug:     'true'
+                path:      'features/app/AppKernel.php'
+                bootstrap: 'features/app/bootstrap.php'

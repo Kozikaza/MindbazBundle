@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<serializer>
+    <class name="MindbazBundle\Model\Subscriber">
+        <xml-namespace prefix="atom" uri="http://www.w3.org/2005/Atom"/>
+        <property name="id" type="integer" />
+        <property name="email" type="string" />
+        <property name="firstSubscriptionDate" type="date" />
+        <property name="lastSubscriptionDate" type="date" />
+        <property name="unsubscriptionDate" type="date" />
+        <property name="status" type="string" />
+        <property name="civility" type="string" />
+        <property name="lastName" type="string" />
+        <property name="firstName" type="string" />
+        <property name="city" type="string" />
+        <property name="zipcode" type="string" />
+        <property name="country" type="string" />
+    </class>
+</serializer>

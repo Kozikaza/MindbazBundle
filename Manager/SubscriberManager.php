@@ -22,11 +22,10 @@ use mbzSubscriber\SubscriberWebService;
 use mbzSubscriber\Unsubscribe;
 use MindbazBundle\Exception\SendErrorException;
 use MindbazBundle\Model\Subscriber;
+use MindbazBundle\Serializer\Bridge\Serializer;
 use MindbazBundle\Serializer\SubscriberEncoder;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>
@@ -47,7 +46,7 @@ class SubscriberManager
     private $oneshotWebService;
 
     /**
-     * @var SerializerInterface|DenormalizerInterface
+     * @var Serializer
      */
     private $serializer;
 
@@ -57,12 +56,12 @@ class SubscriberManager
     private $logger;
 
     /**
-     * @param SubscriberWebService                       $subscriberWebService
-     * @param OneshotWebService                          $oneshotWebService
-     * @param SerializerInterface|DenormalizerInterface  $serializer
-     * @param LoggerInterface|null                       $logger
+     * @param SubscriberWebService $subscriberWebService
+     * @param OneshotWebService    $oneshotWebService
+     * @param Serializer           $serializer
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, SerializerInterface $serializer, LoggerInterface $logger = null)
+    public function __construct(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, Serializer $serializer, LoggerInterface $logger = null)
     {
         $this->subscriberWebService = $subscriberWebService;
         $this->oneshotWebService = $oneshotWebService;
@@ -182,7 +181,13 @@ class SubscriberManager
      */
     private function getBody(\Swift_Mime_Message $message, $contentTypeRequired)
     {
-        if ($contentTypeRequired === $message->getContentType()) {
+        $contentType = $message->getContentType();
+
+        if ('multipart/alternative' === $contentType) {
+            $contentType = $message->getBody() !== strip_tags($message->getBody()) ? 'text/html' : 'text/plain';
+        }
+
+        if ($contentTypeRequired === $contentType) {
             return $message->getBody();
         }
 

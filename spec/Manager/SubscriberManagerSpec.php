@@ -28,20 +28,18 @@ use mbzSubscriber\UnsubscribeResponse;
 use MindbazBundle\Exception\SendErrorException;
 use MindbazBundle\Manager\SubscriberManager;
 use MindbazBundle\Model\Subscriber;
+use MindbazBundle\Serializer\Bridge\Serializer;
 use MindbazBundle\Serializer\SubscriberEncoder;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>
  */
 class SubscriberManagerSpec extends ObjectBehavior
 {
-    public function let(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, SerializerInterface $serializer, LoggerInterface $logger)
+    public function let(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, Serializer $serializer, LoggerInterface $logger)
     {
-        $serializer->implement(DenormalizerInterface::class);
         $this->beConstructedWith($subscriberWebService, $oneshotWebService, $serializer, $logger);
     }
 
@@ -50,7 +48,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->shouldHaveType(SubscriberManager::class);
     }
 
-    public function it_creates_and_inserts_a_subscriber_from_data(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, InsertSubscriberResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_creates_and_inserts_a_subscriber_from_data(Serializer $serializer, SubscriberWebService $subscriberWebService, InsertSubscriberResponse $response, LoggerInterface $logger, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $serializer->denormalize([
             'email'     => 'foo@example.com',
@@ -104,7 +102,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->findByEmail(['foo@example.com'])->shouldBeEqualTo([]);
     }
 
-    public function it_finds_subscribers_by_email(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_finds_subscribers_by_email(Serializer $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $subscriberWebService->GetSubscribersByEmail(new GetSubscribersByEmail(
             (new ArrayOfString())->setString(['foo@example.com']),
@@ -129,7 +127,7 @@ class SubscriberManagerSpec extends ObjectBehavior
         $this->findOneByEmail('foo@example.com')->shouldBeNull();
     }
 
-    public function it_finds_one_subscriber_by_email(SerializerInterface $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
+    public function it_finds_one_subscriber_by_email(Serializer $serializer, SubscriberWebService $subscriberWebService, GetSubscribersByEmailResponse $response, ArrayOfSubscriber $subscribers, Subscriber $subscriber, MindbazSubscriber $mindbazSubscriber)
     {
         $subscriberWebService->GetSubscribersByEmail(new GetSubscribersByEmail(
             (new ArrayOfString())->setString(['foo@example.com']),
