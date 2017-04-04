@@ -97,7 +97,7 @@ class MailerContext implements Context
      */
     public function ISetACampaign()
     {
-        $this->transport->setCampaign('register');
+        $this->transport->setCampaign('kzkz-test');
     }
 
     /**

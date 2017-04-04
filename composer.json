@@ -1,5 +1,5 @@
 {
-    "name": "daviddlv/mindbaz-bundle",
+    "name": "kozikaza/mindbaz-bundle",
     "type": "symfony-bundle",
     "description": "Symfony bundle to provide a Mindbaz SwiftMailer service",
     "keywords": [

@@ -97,7 +97,7 @@ git push --force
 # License and copyright attribution
 
 When you open a Pull Request to the MindbazBundle project, you agree to license your code under the
-[MIT license](LICENSE) and to transfer the copyright on the submitted code to David DELEVOYE (@daviddlv).
+[MIT license](LICENSE) and to transfer the copyright on the submitted code to [Kozikaza](https://github.com/Kozikaza).
 
 Be sure to you have the right to do that (if you are a professional, ask your company)!
 

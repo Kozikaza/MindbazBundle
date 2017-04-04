@@ -4,15 +4,15 @@ Symfony bundle to provide a Mindbaz SwiftMailer service.
 
 Feel free to contribute on it!
 
-[![Build Status](https://travis-ci.org/daviddlv/MindbazBundle.svg?branch=master)](https://travis-ci.org/daviddlv/MindbazBundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/daviddlv/MindbazBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/daviddlv/MindbazBundle/?branch=master)
+[![Build Status](https://travis-ci.org/kozikaza/MindbazBundle.svg?branch=master)](https://travis-ci.org/daviddlv/MindbazBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kozikaza/MindbazBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/daviddlv/MindbazBundle/?branch=master)
 
 ## Installation
 
 Installing MindbazBundle can be done easily through [Composer](https://getcomposer.org/):
 
 ```bash
-composer require daviddlv/mindbaz-bundle
+composer require kozikaza/mindbaz-bundle
 ```
 
 Register this bundle in your kernel:
@@ -50,4 +50,4 @@ mindbaz:
 
 ## Credits
 
-Created by David DELEVOYE.
+Created by [David DELEVOYE](https://github.com/daviddlv/) & [Vincent CHALAMON](https://github.com/vincentchalamon/).
