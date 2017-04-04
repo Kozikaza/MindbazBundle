@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="mindbaz.webservice.abstract" class="mbzSoapClient" abstract="true" public="false">
+            <argument>%mindbaz.credentials%</argument>
+        </service>
+
+        <service id="mindbaz.webservice.subscriber" class="mbzSubscriber\SubscriberWebService" parent="mindbaz.webservice.abstract" public="false" />
+
+        <service id="mindbaz.webservice.oneshot" class="mbzOneshot\OneshotWebService" parent="mindbaz.webservice.abstract" public="false" />
+
+        <service id="mindbaz.serializer" class="MindbazBundle\Serializer\Bridge\Serializer" public="false">
+            <argument type="service" id="serializer" />
+        </service>
+
+        <service id="mindbaz.serializer.encoder.subscriber" class="MindbazBundle\Serializer\SubscriberEncoder" public="false">
+            <tag name="serializer.encoder" />
+        </service>
+
+        <service id="mindbaz.serializer.normalizer.subscriber" class="MindbazBundle\Serializer\SubscriberNormalizer" public="false">
+            <tag name="serializer.normalizer" />
+        </service>
+
+        <service id="mindbaz.manager.subscriber" class="MindbazBundle\Manager\SubscriberManager">
+            <argument type="service" id="mindbaz.webservice.subscriber"/>
+            <argument type="service" id="mindbaz.serializer"/>
+            <argument type="service" id="logger" on-invalid="null" />
+        </service>
+
+        <service id="mindbaz.manager.message" class="MindbazBundle\Manager\MessageManager" public="false">
+            <argument type="service" id="mindbaz.webservice.oneshot"/>
+            <argument type="service" id="logger" on-invalid="null" />
+        </service>
+
+        <service id="swiftmailer.mailer.mindbaz.transport.event_dispatcher" parent="swiftmailer.transport.eventdispatcher.abstract" public="false" />
+
+        <service id="swiftmailer.mailer.transport.mindbaz" class="MindbazBundle\SwiftMailer\MindbazTransport" public="false">
+            <argument type="service" id="mindbaz.manager.subscriber"/>
+            <argument type="service" id="mindbaz.manager.message"/>
+            <argument type="service" id="swiftmailer.mailer.mindbaz.transport.event_dispatcher"/>
+            <argument>%mindbaz.campaigns%</argument>
+            <argument>%mindbaz.insertMissingSubscribers%</argument>
+        </service>
+    </services>
+</container>

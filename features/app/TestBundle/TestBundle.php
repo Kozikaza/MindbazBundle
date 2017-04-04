@@ -9,10 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle;
+namespace TestBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class MindbazBundle extends Bundle
+/**
+ * @author Vincent Chalamon <vincent@les-tilleuls.coop>
+ */
+class TestBundle extends Bundle
 {
 }

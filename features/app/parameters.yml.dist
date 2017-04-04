@@ -1,0 +1,5 @@
+parameters:
+    mindbaz_id_site: 123
+    mindbaz_login: foo
+    mindbaz_password: bar
+    mindbaz_campaigns: {foo: 10}

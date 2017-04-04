@@ -1,0 +1,25 @@
+imports:
+    - { resource: parameters.yml }
+
+mindbaz:
+    credentials:
+        idSite:   '%mindbaz_id_site%'
+        login:    '%mindbaz_login%'
+        password: '%mindbaz_password%'
+    campaigns:    '%mindbaz_campaigns%'
+
+framework:
+    secret:     MindbazBundle
+    serializer: ~
+    test:       ~
+    profiler:
+        collect: false
+
+swiftmailer:
+    transport: mindbaz
+
+monolog:
+    handlers:
+        file_log:
+            type: stream
+            path: '%kernel.logs_dir%/mindbaz.log'

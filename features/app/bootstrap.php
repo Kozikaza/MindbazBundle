@@ -9,10 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+date_default_timezone_set('UTC');
 
-class MindbazBundle extends Bundle
-{
-}
+$loader = require __DIR__.'/../../vendor/autoload.php';
+require 'AppKernel.php';
+
+AnnotationRegistry::registerLoader([$loader, 'loadClass']);
+
+return $loader;

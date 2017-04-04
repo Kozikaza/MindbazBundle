@@ -1,273 +1,160 @@
 <?php
 
-namespace MindbazBundle\SwiftMailer;
-;
-use mbzOneshot\OneshotWebService;
-use mbzOneshot\Send;
-use mbzSubscriber\GetSubscriberByEmail;
-use mbzSubscriber\SubscriberWebService;
-use \Swift_Events_EventDispatcher;
-use \Swift_Events_EventListener;
-use \Swift_Events_SendEvent;
-use \Swift_Mime_Message;
-use \Swift_MimePart;
-use \Swift_Transport;
+/*
+ * This file is part of the MindbazBundle package.
+ *
+ * (c) David DELEVOYE <david.delevoye@adeo.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-class MindbazTransport implements Swift_Transport
+namespace MindbazBundle\SwiftMailer;
+
+use MindbazBundle\Exception\InvalidCampaignException;
+use MindbazBundle\Exception\MissingSubscribersException;
+use MindbazBundle\Manager\MessageManager;
+use MindbazBundle\Manager\SubscriberManager;
+use MindbazBundle\Model\Subscriber;
+
+/**
+ * @author Vincent Chalamon <vincent@les-tilleuls.coop>
+ */
+class MindbazTransport implements \Swift_Transport
 {
     /**
-     * @type Swift_Events_EventDispatcher
+     * @var SubscriberManager
      */
-    protected $dispatcher;
+    private $subscriberManager;
 
     /**
-     * @var OneshotWebService
+     * @var MessageManager
      */
-    protected $oneshotService;
+    private $messageManager;
 
     /**
-     * @var SubscriberWebService
+     * @var \Swift_Events_EventDispatcher
      */
-    protected $subscriberService;
+    private $eventDispatcher;
 
     /**
-     * @var array|null
+     * @var array
      */
-    protected $resultApi;
+    private $campaigns;
 
     /**
-     * @param Swift_Events_EventDispatcher $dispatcher
+     * @var bool
      */
-    public function __construct(Swift_Events_EventDispatcher $dispatcher)
+    private $insertMissingSubscribers = false;
+
+    /**
+     * @var string|null
+     */
+    private $campaign;
+
+    /**
+     * @param SubscriberManager             $subscriberManager
+     * @param MessageManager                $messageManager
+     * @param \Swift_Events_EventDispatcher $eventDispatcher
+     * @param array                         $campaigns
+     * @param bool                          $insertMissingSubscribers
+     */
+    public function __construct(SubscriberManager $subscriberManager, MessageManager $messageManager, \Swift_Events_EventDispatcher $eventDispatcher, array $campaigns, $insertMissingSubscribers)
     {
-        $this->dispatcher = $dispatcher;
-        $this->oneshotService = null;
-        $this->subscriberService = null;
+        $this->subscriberManager = $subscriberManager;
+        $this->messageManager = $messageManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->campaigns = $campaigns;
+        $this->insertMissingSubscribers = $insertMissingSubscribers;
     }
 
     /**
-     * Not used
+     * @param string|null $campaign
+     *
+     * @return MindbazTransport
+     */
+    public function setCampaign($campaign = null)
+    {
+        $this->campaign = $campaign;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $insertMissingSubscribers
+     *
+     * @return MindbazTransport
+     */
+    public function setInsertMissingSubscribers($insertMissingSubscribers)
+    {
+        $this->insertMissingSubscribers = $insertMissingSubscribers;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function isStarted()
     {
-        return false;
+        return true;
     }
 
     /**
-     * Not used
+     * {@inheritdoc}
      */
     public function start()
     {
     }
 
     /**
-     * Not used
+     * {@inheritdoc}
      */
     public function stop()
     {
     }
 
     /**
-     * @param OneshotWebService $service
-     * @return $this
+     * {@inheritdoc}
      */
-    public function setOneshotService(OneshotWebService $service)
+    public function send(\Swift_Mime_Message $message, &$failedRecipients = null)
     {
-        $this->oneshotService = $service;
-
-        return $this;
-    }
-
-    /**
-     * @return null|OneshotWebService
-     */
-    public function getOneshotService()
-    {
-        return $this->oneshotService;
-    }
-
-    /**
-     * @param SubscriberWebService $service
-     * @return $this
-     */
-    public function setSubscriberService(SubscriberWebService $service)
-    {
-        $this->subscriberService = $service;
-
-        return $this;
-    }
-
-    /**
-     * @return null|SubscriberWebService
-     */
-    public function getSubscriberService()
-    {
-        return $this->subscriberService;
-    }
-
-    /**
-     * @param Swift_Mime_Message $message
-     * @param null $failedRecipients
-     * @return int Number of messages sent
-     */
-    public function send(Swift_Mime_Message $message, &$failedRecipients = null)
-    {
-        $this->resultApi = null;
-
-        if ($event = $this->dispatcher->createSendEvent($this, $message)) {
-            $this->dispatcher->dispatchEvent($event, 'beforeSendPerformed');
-            if ($event->bubbleCancelled()) {
-                return 0;
-            }
+        // Security: a valid campaign is required
+        if (null === $this->campaign || !array_key_exists($this->campaign, $this->campaigns)) {
+            throw new InvalidCampaignException();
         }
 
-        $sendCount = 0;
-        $mindbazMessage = $this->getMindbazMessage($message);
-        $sendResult = $this->getOneshotService()->Send($mindbazMessage);
+        // Find subscribers by email addresses
+        $emails = array_keys($message->getTo());
+        $subscribers = $this->subscriberManager->findByEmail($emails);
 
-        $this->resultApi = $sendResult->getSendResult();
+        $invalid = array_diff($emails, array_map(function (Subscriber $subscriber) {
+            return $subscriber->getEmail();
+        }, $subscribers));
 
-        /*
-        foreach ($this->resultApi as $item) {
-            if ($item['status'] === 'sent' || $item['status'] === 'queued') {
-                $sendCount++;
-            } else {
-                $failedRecipients[] = $item['email'];
-            }
+        // Don't insert missing subscribers
+        if (false === $this->insertMissingSubscribers && 0 < count($invalid)) {
+            throw new MissingSubscribersException($invalid);
         }
 
-        if ($event) {
-            if ($sendCount > 0) {
-                $event->setResult(Swift_Events_SendEvent::RESULT_SUCCESS);
-            } else {
-                $event->setResult(Swift_Events_SendEvent::RESULT_FAILED);
-            }
-            $this->dispatcher->dispatchEvent($event, 'sendPerformed');
+        // Insert missing subscribers
+        foreach ($invalid as $email) {
+            $subscribers[] = $this->subscriberManager->create(['email' => $email]);
         }
 
-        return $sendCount;
-        */
+        // Send email
+        foreach ($subscribers as $subscriber) {
+            $this->messageManager->send($this->campaigns[$this->campaign], $subscriber, $message);
+        }
+
+        return count($subscribers);
     }
 
     /**
-     * @param Swift_Events_EventListener $plugin
+     * {@inheritdoc}
      */
-    public function registerPlugin(Swift_Events_EventListener $plugin)
+    public function registerPlugin(\Swift_Events_EventListener $plugin)
     {
-        $this->dispatcher->bindEventListener($plugin);
+        $this->eventDispatcher->bindEventListener($plugin);
     }
-
-    /**
-     * @return array
-     */
-    protected function getSupportedContentTypes()
-    {
-        return array(
-            'text/plain',
-            'text/html'
-        );
-    }
-
-    /**
-     * @param string $contentType
-     * @return bool
-     */
-    protected function supportsContentType($contentType)
-    {
-        return in_array($contentType, $this->getSupportedContentTypes());
-    }
-
-    /**
-     * @param Swift_Mime_Message $message
-     * @return string
-     */
-    protected function getMessagePrimaryContentType(Swift_Mime_Message $message)
-    {
-        $contentType = $message->getContentType();
-        if ($this->supportsContentType($contentType)) {
-            return $contentType;
-        }
-
-        // SwiftMailer hides the content type set in the constructor of Swift_Mime_Message as soon
-        // as you add another part to the message. We need to access the protected property
-        // _userContentType to get the original type.
-        $messageRef = new \ReflectionClass($message);
-        if ($messageRef->hasProperty('_userContentType')) {
-            $propRef = $messageRef->getProperty('_userContentType');
-            $propRef->setAccessible(true);
-            $contentType = $propRef->getValue($message);
-        }
-
-        return $contentType;
-    }
-
-    /**
-     * @param Swift_Mime_Message $message
-     * @return Send
-     */
-    public function getMindbazMessage(Swift_Mime_Message $message)
-    {
-        if (!$message->getHeaders()->has('X-MBZ-Campaign')) {
-            throw new \RuntimeException('Campaign ID must be defined in header "X-MBZ-Campaign"');
-        }
-
-        $campaignId = $message->getHeaders()->get('X-MBZ-Campaign')->getValue();
-
-        $contentType = $this->getMessagePrimaryContentType($message);
-        $fromAddresses = $message->getFrom();
-        $toAddresses = $message->getTo();
-
-        $fromName = current($fromAddresses);
-        $to = key($toAddresses);
-
-        $bodyHtml = $bodyText = null;
-        if ($contentType === 'text/plain') {
-            $bodyText = $message->getBody();
-        } elseif ($contentType === 'text/html') {
-            $bodyHtml = $message->getBody();
-        } else {
-            $bodyHtml = $message->getBody();
-        }
-
-        foreach ($message->getChildren() as $child) {
-            if ($child instanceof Swift_MimePart && $this->supportsContentType($child->getContentType())) {
-                if ($child->getContentType() == "text/html") {
-                    $bodyHtml = $child->getBody();
-                } elseif ($child->getContentType() == "text/plain") {
-                    $bodyText = $child->getBody();
-                }
-            }
-        }
-
-        if ($message->getHeaders()->has('List-Unsubscribe')) {
-            $headers['List-Unsubscribe'] = $message->getHeaders()->get('List-Unsubscribe')->getValue();
-        }
-
-        $mindbazMessage = new Send(
-            $campaignId, $this->getSubscriber($to)->getIdSubscriber(), $bodyHtml, $bodyText, $fromName, $message->getSubject()
-        );
-
-        return $mindbazMessage;
-    }
-
-    /**
-     * @param string $email
-     * @return \mbzSubscriber\Subscriber
-     */
-    public function getSubscriber($email)
-    {
-        $subscribedEmail = new GetSubscriberByEmail($email, null);
-        $subscribedIdResult = $this->getSubscriberService()->GetSubscriberByEmail($subscribedEmail);
-
-        return $subscribedIdResult->getGetSubscriberByEmailResult();
-    }
-
-    /**
-     * @return null|array
-     */
-    public function getResultApi()
-    {
-        return $this->resultApi;
-    }
-
 }

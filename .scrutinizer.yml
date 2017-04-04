@@ -1,0 +1,36 @@
+filter:
+    excluded_paths:
+        - 'features/*'
+        - 'spec/*'
+        - 'vendor/*'
+
+checks:
+    php: true
+
+coding_style:
+    php:
+        spaces:
+            before_parentheses:
+                closure_definition: true
+            around_operators:
+                concatenation: false
+
+build:
+    environment:
+        php:
+            version: 5.6
+    tests:
+        override:
+            -
+                command: 'vendor/bin/phpspec run'
+                coverage:
+                    file: 'coverage.xml'
+                    format: 'php-clover'
+
+tools:
+    php_code_sniffer:
+        config:
+            standard: 'symfony'
+    php_cs_fixer:
+        config:
+            level: 'all'
