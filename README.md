@@ -4,8 +4,8 @@ Symfony bundle to provide a Mindbaz SwiftMailer service.
 
 Feel free to contribute on it!
 
-[![Build Status](https://travis-ci.org/kozikaza/MindbazBundle.svg?branch=master)](https://travis-ci.org/daviddlv/MindbazBundle)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kozikaza/MindbazBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/daviddlv/MindbazBundle/?branch=master)
+[![Build Status](https://travis-ci.org/Kozikaza/MindbazBundle.svg?branch=master)](https://travis-ci.org/Kozikaza/MindbazBundle)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Kozikaza/MindbazBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Kozikaza/MindbazBundle/?branch=master)
 
 ## Installation
 
