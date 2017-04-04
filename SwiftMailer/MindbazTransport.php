@@ -13,6 +13,7 @@ namespace MindbazBundle\SwiftMailer;
 
 use MindbazBundle\Exception\InvalidCampaignException;
 use MindbazBundle\Exception\MissingSubscribersException;
+use MindbazBundle\Manager\MessageManager;
 use MindbazBundle\Manager\SubscriberManager;
 use MindbazBundle\Model\Subscriber;
 
@@ -25,6 +26,11 @@ class MindbazTransport implements \Swift_Transport
      * @var SubscriberManager
      */
     private $subscriberManager;
+
+    /**
+     * @var MessageManager
+     */
+    private $messageManager;
 
     /**
      * @var \Swift_Events_EventDispatcher
@@ -48,13 +54,15 @@ class MindbazTransport implements \Swift_Transport
 
     /**
      * @param SubscriberManager             $subscriberManager
+     * @param MessageManager                $messageManager
      * @param \Swift_Events_EventDispatcher $eventDispatcher
      * @param array                         $campaigns
      * @param bool                          $insertMissingSubscribers
      */
-    public function __construct(SubscriberManager $subscriberManager, \Swift_Events_EventDispatcher $eventDispatcher, array $campaigns, $insertMissingSubscribers)
+    public function __construct(SubscriberManager $subscriberManager, MessageManager $messageManager, \Swift_Events_EventDispatcher $eventDispatcher, array $campaigns, $insertMissingSubscribers)
     {
         $this->subscriberManager = $subscriberManager;
+        $this->messageManager = $messageManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->campaigns = $campaigns;
         $this->insertMissingSubscribers = $insertMissingSubscribers;
@@ -136,7 +144,7 @@ class MindbazTransport implements \Swift_Transport
 
         // Send email
         foreach ($subscribers as $subscriber) {
-            $this->subscriberManager->send($this->campaigns[$this->campaign], $subscriber, $message);
+            $this->messageManager->send($this->campaigns[$this->campaign], $subscriber, $message);
         }
 
         return count($subscribers);

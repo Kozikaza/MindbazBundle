@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="mindbaz.jms_serializer.deserialization_visitor.mindbaz" class="MindbazBundle\Serializer\Bridge\Visitor\MindbazDeserializationVisitor">
+            <argument type="service" id="jms_serializer.naming_strategy" />
+            <tag name="jms_serializer.deserialization_visitor" format="mindbaz" />
+        </service>
+
+        <service id="mindbaz.jms_serializer.serialization_visitor.mindbaz" class="MindbazBundle\Serializer\Bridge\Visitor\MindbazSerializationVisitor">
+            <argument type="service" id="jms_serializer.naming_strategy" />
+            <tag name="jms_serializer.serialization_visitor" format="mindbaz" />
+        </service>
+    </services>
+</container>

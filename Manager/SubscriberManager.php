@@ -11,8 +11,6 @@
 
 namespace MindbazBundle\Manager;
 
-use mbzOneshot\OneshotWebService;
-use mbzOneshot\Send;
 use mbzSubscriber\ArrayOfInt;
 use mbzSubscriber\ArrayOfString;
 use mbzSubscriber\GetSubscribersByEmail;
@@ -20,7 +18,6 @@ use mbzSubscriber\InsertSubscriber;
 use mbzSubscriber\Subscriber as MindbazSubscriber;
 use mbzSubscriber\SubscriberWebService;
 use mbzSubscriber\Unsubscribe;
-use MindbazBundle\Exception\SendErrorException;
 use MindbazBundle\Model\Subscriber;
 use MindbazBundle\Serializer\Bridge\Serializer;
 use MindbazBundle\Serializer\SubscriberEncoder;
@@ -32,18 +29,10 @@ use Psr\Log\NullLogger;
  */
 class SubscriberManager
 {
-    const MINDBAZ_SEND_RESPONSE_OK = 'OK';
-    const MINDBAZ_SEND_RESPONSE_NOK = 'NOK';
-
     /**
      * @var SubscriberWebService
      */
     private $subscriberWebService;
-
-    /**
-     * @var OneshotWebService
-     */
-    private $oneshotWebService;
 
     /**
      * @var Serializer
@@ -57,14 +46,12 @@ class SubscriberManager
 
     /**
      * @param SubscriberWebService $subscriberWebService
-     * @param OneshotWebService    $oneshotWebService
      * @param Serializer           $serializer
      * @param LoggerInterface|null $logger
      */
-    public function __construct(SubscriberWebService $subscriberWebService, OneshotWebService $oneshotWebService, Serializer $serializer, LoggerInterface $logger = null)
+    public function __construct(SubscriberWebService $subscriberWebService, Serializer $serializer, LoggerInterface $logger = null)
     {
         $this->subscriberWebService = $subscriberWebService;
-        $this->oneshotWebService = $oneshotWebService;
         $this->serializer = $serializer;
         $this->logger = $logger ?: new NullLogger();
     }
@@ -145,58 +132,5 @@ class SubscriberManager
         $subscribers = $this->findByEmail([$email]);
 
         return 0 < count($subscribers) ? $subscribers[0] : null;
-    }
-
-    /**
-     * @param int                 $idCampaign
-     * @param Subscriber          $subscriber
-     * @param \Swift_Mime_Message $message
-     */
-    public function send($idCampaign, Subscriber $subscriber, \Swift_Mime_Message $message)
-    {
-        $response = $this->oneshotWebService->Send(
-            new Send(
-                $idCampaign,
-                $subscriber->getId(),
-                $this->getBody($message, 'text/html'),
-                $this->getBody($message, 'text/plain'),
-                $message->getSender(),
-                $message->getSubject()
-            )
-        );
-        if (self::MINDBAZ_SEND_RESPONSE_OK === $response->getSendResult()) {
-            $this->logger->info('Message successfully sent to subscriber', ['id' => $subscriber->getId()]);
-        } else {
-            $this->logger->error('An error occurred while sending the message to subscriber', ['id' => $subscriber->getId(), 'response' => $response->getSendResult()]);
-
-            throw new SendErrorException();
-        }
-    }
-
-    /**
-     * @param \Swift_Mime_Message $message
-     * @param string              $contentTypeRequired
-     *
-     * @return null|string
-     */
-    private function getBody(\Swift_Mime_Message $message, $contentTypeRequired)
-    {
-        $contentType = $message->getContentType();
-
-        if ('multipart/alternative' === $contentType) {
-            $contentType = $message->getBody() !== strip_tags($message->getBody()) ? 'text/html' : 'text/plain';
-        }
-
-        if ($contentTypeRequired === $contentType) {
-            return $message->getBody();
-        }
-
-        foreach ($message->getChildren() as $child) {
-            if ($contentTypeRequired === $child->getContentType()) {
-                return $child->getBody();
-            }
-        }
-
-        return null;
     }
 }

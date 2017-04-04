@@ -61,5 +61,9 @@ class MindbazExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('mailer.xml');
+
+        if (array_key_exists('JMSSerializerBundle', $container->getParameter('kernel.bundles'))) {
+            $loader->load('jmsserializer.xml');
+        }
     }
 }

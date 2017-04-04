@@ -22,32 +22,32 @@ use PhpSpec\ObjectBehavior;
  */
 class SubscriberEncoderSpec extends ObjectBehavior
 {
-    public function it_is_initializable()
+    function it_is_initializable()
     {
         $this->shouldHaveType(SubscriberEncoder::class);
     }
 
-    public function it_supports_encoding()
+    function it_supports_encoding()
     {
         $this->supportsEncoding('mindbaz')->shouldBeTrue();
     }
 
-    public function it_does_not_support_encoding()
+    function it_does_not_support_encoding()
     {
         $this->supportsEncoding('invalid')->shouldBeFalse();
     }
 
-    public function it_supports_decoding()
+    function it_supports_decoding()
     {
         $this->supportsDecoding('mindbaz')->shouldBeTrue();
     }
 
-    public function it_does_not_support_decoding()
+    function it_does_not_support_decoding()
     {
         $this->supportsDecoding('invalid')->shouldBeFalse();
     }
 
-    public function it_encodes()
+    function it_encodes()
     {
         $data = [
             'email'                 => 'foo@example.com',
@@ -69,7 +69,7 @@ class SubscriberEncoderSpec extends ObjectBehavior
         $subscriber->getFld()->shouldCount(count($data));
     }
 
-    public function it_decodes()
+    function it_decodes()
     {
         $data = [
             'email'                 => 'foo@example.com',
@@ -95,7 +95,7 @@ class SubscriberEncoderSpec extends ObjectBehavior
         $this->decode($subscriber, SubscriberEncoder::FORMAT)->shouldBeEqualTo($data);
     }
 
-    public function getMatchers()
+    function getMatchers()
     {
         return [
             'beTrue' => function ($subject) {

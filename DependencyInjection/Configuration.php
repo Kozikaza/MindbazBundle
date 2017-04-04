@@ -42,6 +42,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('campaigns')
                     ->useAttributeAsKey('name')
+                    ->normalizeKeys(false)
                     ->requiresAtLeastOneElement()
                     ->prototype('scalar')->end()
                 ->end()

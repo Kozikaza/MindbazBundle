@@ -19,12 +19,12 @@ use PhpSpec\ObjectBehavior;
  */
 class MissingSubscribersExceptionSpec extends ObjectBehavior
 {
-    public function let()
+    function let()
     {
         $this->beConstructedWith(['foo@example.com']);
     }
 
-    public function it_is_initializable()
+    function it_is_initializable()
     {
         $this->shouldHaveType(MissingSubscribersException::class);
         $this->getMessage()->shouldBeEqualTo('Missing subscribers in Mindbaz: foo@example.com');

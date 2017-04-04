@@ -20,32 +20,32 @@ use PhpSpec\ObjectBehavior;
  */
 class SubscriberNormalizerSpec extends ObjectBehavior
 {
-    public function it_is_initializable()
+    function it_is_initializable()
     {
         $this->shouldHaveType(SubscriberNormalizer::class);
     }
 
-    public function it_supports_normalization(Subscriber $subscriber)
+    function it_supports_normalization(Subscriber $subscriber)
     {
         $this->supportsNormalization($subscriber)->shouldBeTrue();
     }
 
-    public function it_does_not_support_normalization(\stdClass $object)
+    function it_does_not_support_normalization(\stdClass $object)
     {
         $this->supportsNormalization($object)->shouldBeFalse();
     }
 
-    public function it_supports_denormalization()
+    function it_supports_denormalization()
     {
         $this->supportsDenormalization([], Subscriber::class)->shouldBeTrue();
     }
 
-    public function it_does_not_support_denormalization()
+    function it_does_not_support_denormalization()
     {
         $this->supportsDenormalization([], \stdClass::class)->shouldBeFalse();
     }
 
-    public function it_normalizes()
+    function it_normalizes()
     {
         $subscriber = new Subscriber();
         $subscriber->setEmail('foo@example.com');
@@ -59,7 +59,7 @@ class SubscriberNormalizerSpec extends ObjectBehavior
         ]);
     }
 
-    public function it_denormalizes()
+    function it_denormalizes()
     {
         $subscriber = new Subscriber();
         $subscriber->setEmail('foo@example.com');
@@ -77,7 +77,7 @@ class SubscriberNormalizerSpec extends ObjectBehavior
         $result->shouldHavePropertyEqualTo('lastName', 'DOE');
     }
 
-    public function getMatchers()
+    function getMatchers()
     {
         return [
             'beTrue' => function ($subject) {
