@@ -11,17 +11,23 @@
 
 use Behat\Behat\Context\Context;
 use Dubture\Monolog\Reader\LogReader;
+use Gorghoa\ScenarioStateBehatExtension\Annotation\ScenarioStateArgument;
+use Gorghoa\ScenarioStateBehatExtension\Context\ScenarioStateAwareContext;
+use Gorghoa\ScenarioStateBehatExtension\Context\ScenarioStateAwareTrait;
 use MindbazBundle\Exception\InvalidCampaignException;
 use MindbazBundle\Exception\MissingSubscribersException;
 use MindbazBundle\Manager\SubscriberManager;
+use MindbazBundle\Model\Subscriber;
 use MindbazBundle\SwiftMailer\MindbazTransport;
 use Psr\Log\LoggerInterface;
 
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>
  */
-class MailerContext implements Context
+class MailerContext implements Context, ScenarioStateAwareContext
 {
+    use ScenarioStateAwareTrait;
+
     /**
      * @var \Swift_Mailer
      */
@@ -47,18 +53,12 @@ class MailerContext implements Context
      */
     private $manager;
 
-    /**
-     * @var string
-     */
-    private $randomEmail;
-
     public function __construct(\Swift_Mailer $mailer, LoggerInterface $logger, SubscriberManager $manager)
     {
         $this->mailer = $mailer;
         $this->transport = $mailer->getTransport();
         $this->logger = $logger;
         $this->manager = $manager;
-        $this->randomEmail = sprintf('foo%d@example.com', rand());
     }
 
     /**
@@ -86,9 +86,11 @@ class MailerContext implements Context
      */
     public function resetSubscribers()
     {
-        $subscriber = $this->manager->findOneByEmail($this->randomEmail);
-        if (null !== $subscriber) {
-            $this->manager->unsubscribe($subscriber);
+        if ($this->scenarioState->hasStateFragment('email')) {
+            $subscriber = $this->manager->findOneByEmail($this->scenarioState->getStateFragment('email'));
+            if (null !== $subscriber) {
+                $this->manager->unsubscribe($subscriber);
+            }
         }
     }
 
@@ -111,15 +113,20 @@ class MailerContext implements Context
     /**
      * @When I send an email
      * @When I send an email to an existing subscriber
+     * @When I send another email to the same address
+     *
+     * @ScenarioStateArgument("email")
+     *
+     * @param string $email
      */
-    public function ISendAnEmailToAnExistingSubscriber()
+    public function ISendAnEmailToAnExistingSubscriber($email = 'vincent@les-tilleuls.coop')
     {
         $message = new \Swift_Message('MindbazBundle test title', <<<'HTML'
 <p>Mindbaz body message</p>
 HTML
             , 'text/html');
         $message->setFrom('noreply@example.com');
-        $message->addTo('vincent@les-tilleuls.coop');
+        $message->addTo($email);
         $message->addPart('Mindbaz body message', 'text/plain');
         try {
             if (0 === $this->mailer->send($message)) {
@@ -135,12 +142,43 @@ HTML
      */
     public function ISendAnEmailToANonExistingSubscriber()
     {
+        // Generate email
+        $email = sprintf('foo%d@example.com', rand());
+        $this->scenarioState->provideStateFragment('email', $email);
+
         $message = new \Swift_Message('MindbazBundle test title', <<<'HTML'
 <p>Mindbaz body message</p>
 HTML
         , 'text/html');
         $message->setFrom('noreply@example.com');
-        $message->addTo($this->randomEmail);
+        $message->addTo($email);
+        $message->addPart('Mindbaz body message', 'text/plain');
+        try {
+            if (0 === $this->mailer->send($message)) {
+                throw new \RuntimeException('Unable to send email');
+            }
+        } catch (InvalidCampaignException $e) {
+            $this->exception = $e;
+        } catch (MissingSubscribersException $e) {
+            $this->exception = $e;
+        }
+    }
+
+    /**
+     * @When I send an email to a non-existing subscriber with an uppercase address
+     */
+    public function ISendAnEmailToANonExistingSubscriberWithAnUppercaseAddress()
+    {
+        // Generate email
+        $email = sprintf('fOo%d@example.com', rand());
+        $this->scenarioState->provideStateFragment('email', $email);
+
+        $message = new \Swift_Message('MindbazBundle test title', <<<'HTML'
+<p>Mindbaz body message</p>
+HTML
+        , 'text/html');
+        $message->setFrom('noreply@example.com');
+        $message->addTo($email);
         $message->addPart('Mindbaz body message', 'text/plain');
         try {
             if (0 === $this->mailer->send($message)) {
@@ -156,7 +194,7 @@ HTML
     /**
      * @Then an email should be sent to this user
      */
-    public function AnEmailShouldBeSentToThisUser()
+    public function anEmailShouldBeSentToThisUser()
     {
         $reader = new LogReader(__DIR__.'/../app/logs/mindbaz.log');
 
@@ -176,10 +214,31 @@ HTML
 
     /**
      * @Then this user should have been created on Mindbaz
+     *
+     * @ScenarioStateArgument("email")
+     *
+     * @param string $email
      */
-    public function thisUserShouldHaveBeenCreatedOnMindbaz()
+    public function thisUserShouldHaveBeenCreatedOnMindbaz($email)
     {
-        \PHPUnit\Framework\Assert::assertNotNull($this->manager->findOneByEmail($this->randomEmail));
+        $subscriber = $this->manager->findOneByEmail($email);
+        \PHPUnit\Framework\Assert::assertNotNull($subscriber);
+        $this->scenarioState->provideStateFragment('subscriber', $subscriber);
+    }
+
+    /**
+     * @Then its email address should have been lowercased
+     *
+     * @ScenarioStateArgument("subscriber")
+     * @ScenarioStateArgument("email")
+     *
+     * @param Subscriber $subscriber
+     * @param string     $email
+     */
+    public function itsEmailAddressShouldHaveBeenLowercased(Subscriber $subscriber, $email)
+    {
+        \PHPUnit\Framework\Assert::assertRegExp('/^[^A-Z]+$/', $subscriber->getEmail());
+        \PHPUnit\Framework\Assert::assertEquals(strtolower($email), $subscriber->getEmail());
     }
 
     /**

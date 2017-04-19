@@ -104,7 +104,7 @@ class SubscriberManager
     {
         $result = $this->subscriberWebService->GetSubscribersByEmail(
             new GetSubscribersByEmail(
-                (new ArrayOfString())->setString($emails),
+                (new ArrayOfString())->setString(array_map('strtolower', $emails)),
                 (new ArrayOfInt())->setInt([0, 1])
             )
         )->getGetSubscribersByEmailResult();

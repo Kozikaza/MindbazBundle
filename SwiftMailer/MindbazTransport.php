@@ -125,7 +125,7 @@ class MindbazTransport implements \Swift_Transport
         }
 
         // Find subscribers by email addresses
-        $emails = array_keys($message->getTo());
+        $emails = array_map('strtolower', array_keys($message->getTo()));
         $subscribers = $this->subscriberManager->findByEmail($emails);
 
         $invalid = array_diff($emails, array_map(function (Subscriber $subscriber) {
