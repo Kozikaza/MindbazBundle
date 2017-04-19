@@ -1,7 +1,7 @@
 suites:
     mindbaz_bundle:
-        namespace: MindbazBundle
-        psr4_prefix: MindbazBundle
+        namespace: Kozikaza\MindbazBundle
+        psr4_prefix: Kozikaza\MindbazBundle
         src_path: .
 extensions:
     LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:

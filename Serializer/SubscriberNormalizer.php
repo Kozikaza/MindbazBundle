@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Serializer;
+namespace Kozikaza\MindbazBundle\Serializer;
 
-use MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\Model\Subscriber;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 

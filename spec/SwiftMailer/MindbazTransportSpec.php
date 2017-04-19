@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace spec\MindbazBundle\SwiftMailer;
+namespace spec\Kozikaza\MindbazBundle\SwiftMailer;
 
-use MindbazBundle\Exception\InvalidCampaignException;
-use MindbazBundle\Exception\MissingSubscribersException;
-use MindbazBundle\Manager\MessageManager;
-use MindbazBundle\Manager\SubscriberManager;
-use MindbazBundle\Model\Subscriber;
-use MindbazBundle\SwiftMailer\MindbazTransport;
+use Kozikaza\MindbazBundle\Exception\InvalidCampaignException;
+use Kozikaza\MindbazBundle\Exception\MissingSubscribersException;
+use Kozikaza\MindbazBundle\Manager\MessageManager;
+use Kozikaza\MindbazBundle\Manager\SubscriberManager;
+use Kozikaza\MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\SwiftMailer\MindbazTransport;
 use PhpSpec\ObjectBehavior;
 
 /**

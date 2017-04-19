@@ -22,7 +22,7 @@ Register this bundle in your kernel:
 public function registerBundles()
 {
     $bundles = [
-        new MindbazBundle\MindbazBundle(),
+        new Kozikaza\MindbazBundle\MindbazBundle(),
         // ...
     ];
 

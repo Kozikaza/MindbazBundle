@@ -13,32 +13,32 @@
 
         <service id="mindbaz.webservice.oneshot" class="mbzOneshot\OneshotWebService" parent="mindbaz.webservice.abstract" public="false" />
 
-        <service id="mindbaz.serializer" class="MindbazBundle\Serializer\Bridge\Serializer" public="false">
+        <service id="mindbaz.serializer" class="Kozikaza\MindbazBundle\Serializer\Bridge\Serializer" public="false">
             <argument type="service" id="serializer" />
         </service>
 
-        <service id="mindbaz.serializer.encoder.subscriber" class="MindbazBundle\Serializer\SubscriberEncoder" public="false">
+        <service id="mindbaz.serializer.encoder.subscriber" class="Kozikaza\MindbazBundle\Serializer\SubscriberEncoder" public="false">
             <tag name="serializer.encoder" />
         </service>
 
-        <service id="mindbaz.serializer.normalizer.subscriber" class="MindbazBundle\Serializer\SubscriberNormalizer" public="false">
+        <service id="mindbaz.serializer.normalizer.subscriber" class="Kozikaza\MindbazBundle\Serializer\SubscriberNormalizer" public="false">
             <tag name="serializer.normalizer" />
         </service>
 
-        <service id="mindbaz.manager.subscriber" class="MindbazBundle\Manager\SubscriberManager">
+        <service id="mindbaz.manager.subscriber" class="Kozikaza\MindbazBundle\Manager\SubscriberManager">
             <argument type="service" id="mindbaz.webservice.subscriber"/>
             <argument type="service" id="mindbaz.serializer"/>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
-        <service id="mindbaz.manager.message" class="MindbazBundle\Manager\MessageManager" public="false">
+        <service id="mindbaz.manager.message" class="Kozikaza\MindbazBundle\Manager\MessageManager" public="false">
             <argument type="service" id="mindbaz.webservice.oneshot"/>
             <argument type="service" id="logger" on-invalid="null" />
         </service>
 
         <service id="swiftmailer.mailer.mindbaz.transport.event_dispatcher" parent="swiftmailer.transport.eventdispatcher.abstract" public="false" />
 
-        <service id="swiftmailer.mailer.transport.mindbaz" class="MindbazBundle\SwiftMailer\MindbazTransport" public="false">
+        <service id="swiftmailer.mailer.transport.mindbaz" class="Kozikaza\MindbazBundle\SwiftMailer\MindbazTransport" public="false">
             <argument type="service" id="mindbaz.manager.subscriber"/>
             <argument type="service" id="mindbaz.manager.message"/>
             <argument type="service" id="swiftmailer.mailer.mindbaz.transport.event_dispatcher"/>

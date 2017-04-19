@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Serializer\Bridge;
+namespace Kozikaza\MindbazBundle\Serializer\Bridge;
 
 use JMS\Serializer\ArrayTransformerInterface;
 use JMS\Serializer\SerializerInterface as JMSSerializerInterface;
+use Kozikaza\MindbazBundle\Model\Subscriber;
 use mbzSubscriber\Subscriber as MindbazSubscriber;
-use MindbazBundle\Model\Subscriber;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 

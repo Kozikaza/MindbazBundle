@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\DependencyInjection;
+namespace Kozikaza\MindbazBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
