@@ -9,8 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Manager;
+namespace Kozikaza\MindbazBundle\Manager;
 
+use Kozikaza\MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\Serializer\Bridge\Serializer;
+use Kozikaza\MindbazBundle\Serializer\SubscriberEncoder;
 use mbzSubscriber\ArrayOfInt;
 use mbzSubscriber\ArrayOfString;
 use mbzSubscriber\GetSubscribersByEmail;
@@ -18,9 +21,6 @@ use mbzSubscriber\InsertSubscriber;
 use mbzSubscriber\Subscriber as MindbazSubscriber;
 use mbzSubscriber\SubscriberWebService;
 use mbzSubscriber\Unsubscribe;
-use MindbazBundle\Model\Subscriber;
-use MindbazBundle\Serializer\Bridge\Serializer;
-use MindbazBundle\Serializer\SubscriberEncoder;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 

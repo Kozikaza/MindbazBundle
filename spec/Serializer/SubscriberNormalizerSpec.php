@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace spec\MindbazBundle\Serializer;
+namespace spec\Kozikaza\MindbazBundle\Serializer;
 
-use MindbazBundle\Model\Subscriber;
-use MindbazBundle\Serializer\SubscriberNormalizer;
+use Kozikaza\MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\Serializer\SubscriberNormalizer;
 use PhpSpec\ObjectBehavior;
 
 /**

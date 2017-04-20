@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Manager;
+namespace Kozikaza\MindbazBundle\Manager;
 
+use Kozikaza\MindbazBundle\Exception\SendErrorException;
+use Kozikaza\MindbazBundle\Model\Subscriber;
 use mbzOneshot\OneshotWebService;
 use mbzOneshot\Send;
-use MindbazBundle\Exception\SendErrorException;
-use MindbazBundle\Model\Subscriber;
 use Psr\Log\LoggerInterface;
 
 /**

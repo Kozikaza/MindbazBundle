@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle;
+namespace Kozikaza\MindbazBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

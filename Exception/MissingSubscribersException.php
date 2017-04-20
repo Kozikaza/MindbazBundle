@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Exception;
+namespace Kozikaza\MindbazBundle\Exception;
 
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>

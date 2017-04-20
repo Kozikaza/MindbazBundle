@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace spec\MindbazBundle\Exception;
+namespace spec\Kozikaza\MindbazBundle\Exception;
 
-use MindbazBundle\Exception\SendErrorException;
+use Kozikaza\MindbazBundle\Exception\SendErrorException;
 use PhpSpec\ObjectBehavior;
 
 /**

@@ -14,11 +14,11 @@ use Dubture\Monolog\Reader\LogReader;
 use Gorghoa\ScenarioStateBehatExtension\Annotation\ScenarioStateArgument;
 use Gorghoa\ScenarioStateBehatExtension\Context\ScenarioStateAwareContext;
 use Gorghoa\ScenarioStateBehatExtension\Context\ScenarioStateAwareTrait;
-use MindbazBundle\Exception\InvalidCampaignException;
-use MindbazBundle\Exception\MissingSubscribersException;
-use MindbazBundle\Manager\SubscriberManager;
-use MindbazBundle\Model\Subscriber;
-use MindbazBundle\SwiftMailer\MindbazTransport;
+use Kozikaza\MindbazBundle\Exception\InvalidCampaignException;
+use Kozikaza\MindbazBundle\Exception\MissingSubscribersException;
+use Kozikaza\MindbazBundle\Manager\SubscriberManager;
+use Kozikaza\MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\SwiftMailer\MindbazTransport;
 use Psr\Log\LoggerInterface;
 
 /**

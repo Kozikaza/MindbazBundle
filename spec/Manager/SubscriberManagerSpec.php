@@ -9,8 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace spec\MindbazBundle\Manager;
+namespace spec\Kozikaza\MindbazBundle\Manager;
 
+use Kozikaza\MindbazBundle\Manager\SubscriberManager;
+use Kozikaza\MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\Serializer\Bridge\Serializer;
+use Kozikaza\MindbazBundle\Serializer\SubscriberEncoder;
 use mbzSubscriber\ArrayOfInt;
 use mbzSubscriber\ArrayOfString;
 use mbzSubscriber\ArrayOfSubscriber;
@@ -22,10 +26,6 @@ use mbzSubscriber\Subscriber as MindbazSubscriber;
 use mbzSubscriber\SubscriberWebService;
 use mbzSubscriber\Unsubscribe;
 use mbzSubscriber\UnsubscribeResponse;
-use MindbazBundle\Manager\SubscriberManager;
-use MindbazBundle\Model\Subscriber;
-use MindbazBundle\Serializer\Bridge\Serializer;
-use MindbazBundle\Serializer\SubscriberEncoder;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 

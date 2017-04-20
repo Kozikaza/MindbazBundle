@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\SwiftMailer;
+namespace Kozikaza\MindbazBundle\SwiftMailer;
 
-use MindbazBundle\Exception\InvalidCampaignException;
-use MindbazBundle\Exception\MissingSubscribersException;
-use MindbazBundle\Manager\MessageManager;
-use MindbazBundle\Manager\SubscriberManager;
-use MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\Exception\InvalidCampaignException;
+use Kozikaza\MindbazBundle\Exception\MissingSubscribersException;
+use Kozikaza\MindbazBundle\Manager\MessageManager;
+use Kozikaza\MindbazBundle\Manager\SubscriberManager;
+use Kozikaza\MindbazBundle\Model\Subscriber;
 
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>

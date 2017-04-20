@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace spec\MindbazBundle\Serializer;
+namespace spec\Kozikaza\MindbazBundle\Serializer;
 
+use Kozikaza\MindbazBundle\Model\Subscriber;
+use Kozikaza\MindbazBundle\Serializer\SubscriberEncoder;
 use mbzSubscriber\Subscriber as MindbazSubscriber;
 use mbzSubscriber\SubscriberFieldData;
-use MindbazBundle\Model\Subscriber;
-use MindbazBundle\Serializer\SubscriberEncoder;
 use PhpSpec\ObjectBehavior;
 
 /**

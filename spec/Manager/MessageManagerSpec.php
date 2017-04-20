@@ -1,13 +1,13 @@
 <?php
 
-namespace spec\MindbazBundle\Manager;
+namespace spec\Kozikaza\MindbazBundle\Manager;
 
+use Kozikaza\MindbazBundle\Exception\SendErrorException;
+use Kozikaza\MindbazBundle\Manager\MessageManager;
+use Kozikaza\MindbazBundle\Model\Subscriber;
 use mbzOneshot\OneshotWebService;
 use mbzOneshot\Send;
 use mbzOneshot\SendResponse;
-use MindbazBundle\Exception\SendErrorException;
-use MindbazBundle\Manager\MessageManager;
-use MindbazBundle\Model\Subscriber;
 use PhpSpec\ObjectBehavior;
 use Psr\Log\LoggerInterface;
 

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Serializer;
+namespace Kozikaza\MindbazBundle\Serializer;
 
 use mbzSubscriber\Subscriber;
 use mbzSubscriber\SubscriberFieldData;

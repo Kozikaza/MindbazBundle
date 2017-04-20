@@ -21,14 +21,14 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "MindbazBundle\\": ""
+            "Kozikaza\\MindbazBundle\\": ""
         },
         "exclude-from-classmap": ["features/", "spec/"]
     },
     "autoload-dev": {
         "psr-4": {
             "TestBundle\\": "features/app/TestBundle",
-            "spec\\MindbazBundle\\": "spec"
+            "spec\\Kozikaza\\MindbazBundle\\": "spec"
         }
     },
     "repositories": [

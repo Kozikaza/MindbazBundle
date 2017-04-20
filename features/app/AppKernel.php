@@ -30,7 +30,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
-            new MindbazBundle\MindbazBundle(),
+            new Kozikaza\MindbazBundle\MindbazBundle(),
             new TestBundle\TestBundle(),
         ];
         if ('jmsserializer' === $this->getEnvironment()) {

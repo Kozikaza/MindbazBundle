@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace MindbazBundle\Serializer\Bridge\Visitor;
+namespace Kozikaza\MindbazBundle\Serializer\Bridge\Visitor;
 
 use JMS\Serializer\GenericDeserializationVisitor;
+use Kozikaza\MindbazBundle\Serializer\SubscriberEncoder;
 use mbzSubscriber\Subscriber;
-use MindbazBundle\Serializer\SubscriberEncoder;
 
 /**
  * @author Vincent Chalamon <vincent@les-tilleuls.coop>
