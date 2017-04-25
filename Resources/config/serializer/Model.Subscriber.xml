@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <serializer>
-    <class name="MindbazBundle\Model\Subscriber">
+    <class name="Kozikaza\MindbazBundle\Model\Subscriber">
         <xml-namespace prefix="atom" uri="http://www.w3.org/2005/Atom"/>
         <property name="id" type="integer" />
         <property name="email" type="string" />
