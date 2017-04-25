@@ -1,0 +1,12 @@
+imports:
+    - { resource: config.yml }
+
+mindbaz:
+    credentials:
+        idSite:   '%mindbaz_id_site%'
+        login:    '%mindbaz_login%'
+        password: '%mindbaz_password%'
+    campaigns:    '%mindbaz_campaigns%'
+
+swiftmailer:
+    transport: mindbaz
