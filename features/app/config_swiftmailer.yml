@@ -2,11 +2,8 @@ imports:
     - { resource: config.yml }
 
 swiftmailer:
-    default_mailer: mindbaz
-    mailers:
-        mindbaz:
-            transport: mindbaz
-            id_site:   '%mindbaz_id_site%'
-            username:  '%mindbaz_login%'
-            password:  '%mindbaz_password%'
-            campaigns: '%mindbaz_campaigns%'
+    transport: mindbaz
+    id_site:   '%mindbaz_id_site%'
+    username:  '%mindbaz_login%'
+    password:  '%mindbaz_password%'
+    campaigns: '%mindbaz_campaigns%'

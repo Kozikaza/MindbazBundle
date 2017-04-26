@@ -66,9 +66,38 @@ class SwiftmailerExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         foreach ($configs as $key => $config) {
+            // Only 1 mailer configured
             if (!isset($config['mailers'])) {
+                // It's not a Mindbaz transport
+                if (!isset($config['transport']) || 'mindbaz' !== $config['transport']) {
+                    continue;
+                }
+                // Mindbaz parameters are not set through Swiftmailer configuration
+                if (!array_key_exists('id_site', $config) ||
+                    !array_key_exists('username', $config) ||
+                    !array_key_exists('password', $config) ||
+                    !array_key_exists('campaigns', $config)
+                ) {
+                    continue;
+                }
+                // Set/erase Mindbaz configuration
+                $container->prependExtensionConfig('mindbaz', [
+                    'credentials' => [
+                        'idSite'   => $config['id_site'],
+                        'login'    => $config['username'],
+                        'password' => $config['password'],
+                    ],
+                    'campaigns'   => $config['campaigns'],
+                ]);
+                unset(
+                    $configs[$key]['id_site'],
+                    $configs[$key]['username'],
+                    $configs[$key]['password'],
+                    $configs[$key]['campaigns']
+                );
                 continue;
             }
+            // Multiple mailers configured
             foreach ($config['mailers'] as $name => $mailer) {
                 // It's not a Mindbaz transport
                 if (!isset($mailer['transport']) || 'mindbaz' !== $mailer['transport']) {
