@@ -46,6 +46,6 @@ class AppKernel extends Kernel
 
     protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config.yml');
+        $loader->load(__DIR__.'/config_'.$this->getEnvironment().'.yml');
     }
 }

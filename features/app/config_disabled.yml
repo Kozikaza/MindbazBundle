@@ -1,0 +1,12 @@
+imports:
+    - { resource: config.yml }
+
+swiftmailer:
+    default_mailer: mindbaz
+    mailers:
+        mindbaz:
+            transport: mindbaz
+            id_site:   ~
+            username:  ~
+            password:  ~
+            campaigns: ~

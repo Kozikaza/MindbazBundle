@@ -32,21 +32,31 @@ public function registerBundles()
 
 ## Configuration
 
-Edit your configuration file to specify your Mindbaz credentials & campaigns:
+Edit your configuration file to declare your Mindbaz mailer with credentials & campaigns:
 
 ```yml
 # config.yml
-mindbaz:
-    credentials:
-        idSite: 123
-        login: foo
-        password: p4$$w0rd
-    campaigns:
-        register: 123
-        forgot-password: 456
+swiftmailer:
+    default_mailer: direct
+    mailers:
+        direct:
+            transport: "%mailer_transport%"
+            host:      "%mailer_host%"
+            username:  "%mailer_user%"
+            password:  "%mailer_password%"
+            port:      "%mailer_port%"
+            spool:
+                type:  memory
+        mindbaz:
+            id_site:   123      # Must be integer
+            username:  foo
+            password:  p4$$w0rd
+            campaigns:
+                register:        123
+                forgot-password: 456
 ```
 
-**Don't forget to change credentials in previous example!**
+**Don't forget to change credentials & campaigns in previous example!**
 
 ## Credits
 

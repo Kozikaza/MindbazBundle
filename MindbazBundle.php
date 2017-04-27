@@ -11,8 +11,22 @@
 
 namespace Kozikaza\MindbazBundle;
 
+use Kozikaza\MindbazBundle\DependencyInjection\SwiftmailerExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @author Vincent Chalamon <vincent@les-tilleuls.coop>
+ */
 class MindbazBundle extends Bundle
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function build(ContainerBuilder $container)
+    {
+        if ($container->hasExtension('swiftmailer')) {
+            $container->registerExtension(new SwiftmailerExtension($container->getExtension('swiftmailer')));
+        }
+    }
 }

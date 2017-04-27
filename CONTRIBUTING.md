@@ -63,6 +63,8 @@ You can run tests:
 ```
 vendor/bin/behat
 vendor/bin/behat -p jmsserializer
+vendor/bin/behat -p swiftmailer
+vendor/bin/behat -p disabled
 vendor/bin/phpspec run
 ```
 

@@ -54,6 +54,7 @@
     ],
     "require": {
         "php": ">=5.6",
+        "ext-soap": "*",
         "swiftmailer/swiftmailer": "~4.0|~5.0",
         "lancasters/mindbaz-library": "~1.0.0",
         "symfony/config": "~2.8|~3.0",

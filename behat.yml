@@ -1,6 +1,9 @@
+# Test without SwiftmailerBundle configuration
 default:
     suites:
         default:
+            filters:
+                tags: ~@disabled
             contexts:
                 - MailerContext:
                     - '@mailer'
@@ -15,9 +18,12 @@ default:
                 path:      'features/app/AppKernel.php'
                 bootstrap: 'features/app/bootstrap.php'
 
+# Test with JmsSerializerBundle
 jmsserializer:
     suites:
         default:
+            filters:
+                tags: ~@disabled
             contexts:
                 - MailerContext:
                     - '@mailer'
@@ -28,6 +34,46 @@ jmsserializer:
         Behat\Symfony2Extension:
             kernel:
                 env:       'jmsserializer'
+                debug:     'true'
+                path:      'features/app/AppKernel.php'
+                bootstrap: 'features/app/bootstrap.php'
+
+# Test with SwiftmailerBundle
+swiftmailer:
+    suites:
+        default:
+            filters:
+                tags: ~@disabled
+            contexts:
+                - MailerContext:
+                    - '@mailer'
+                    - '@logger'
+                    - '@mindbaz.manager.subscriber'
+    extensions:
+        Gorghoa\ScenarioStateBehatExtension\ServiceContainer\ScenarioStateExtension: ~
+        Behat\Symfony2Extension:
+            kernel:
+                env:       'swiftmailer'
+                debug:     'true'
+                path:      'features/app/AppKernel.php'
+                bootstrap: 'features/app/bootstrap.php'
+
+# Test with no Mindbaz credentials
+disabled:
+    suites:
+        default:
+            filters:
+                tags: '@disabled'
+            contexts:
+                - MailerContext:
+                    - '@mailer'
+                    - '@logger'
+                    - '@mindbaz.manager.subscriber'
+    extensions:
+        Gorghoa\ScenarioStateBehatExtension\ServiceContainer\ScenarioStateExtension: ~
+        Behat\Symfony2Extension:
+            kernel:
+                env:       'disabled'
                 debug:     'true'
                 path:      'features/app/AppKernel.php'
                 bootstrap: 'features/app/bootstrap.php'

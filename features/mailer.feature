@@ -30,3 +30,8 @@ Feature: I should be able to send an email using Mindbaz transport
   Scenario: I send an email in no campaign using Mindbaz transport
     When I send an email
     Then I should get an error
+
+  @disabled
+  Scenario: I send an email in no campaign using Mindbaz transport
+    When I send an email
+    Then I should get an error
